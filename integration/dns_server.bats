@@ -3,7 +3,7 @@
 SERVER_PORT=12043
 
 setup() {
-  target/debug/bam 1>&2 &
+  target/debug/zas 1>&2 &
   pid="$!"
 }
 
