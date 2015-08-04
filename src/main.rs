@@ -1,4 +1,11 @@
 use std::net::UdpSocket;
+use std::str;
+
+struct Question {
+    name: Vec<String>,
+    rrtype: u16,
+    class: u16,
+}
 
 struct Message {
     id: u16, // 2 bytes
@@ -14,6 +21,8 @@ struct Message {
     answer_count: u16, // 2 bytes
     ns_count: u16, // 2 bytes
     ar_count: u16, // 2 bytes
+
+    questions: Vec<Question>,
 }
 
 fn unpack(buffer: &[u8]) -> Message {
@@ -23,6 +32,37 @@ fn unpack(buffer: &[u8]) -> Message {
     let answer_count: u16 = (buffer[6] as u16) << 8 | buffer[7] as u16;
     let ns_count: u16 = (buffer[8] as u16) << 8 | buffer[9] as u16;
     let ar_count: u16 = (buffer[10] as u16) << 8 | buffer[11] as u16;
+
+    let mut offset: usize = 12;
+
+    let mut questions = Vec::with_capacity(question_count as usize);
+
+    for _ in 0..question_count {
+        let mut name = Vec::new();
+
+        loop {
+            let size: usize = buffer[offset] as usize;
+
+            if size == 0 {
+                break;
+            }
+
+            name.push(str::from_utf8(&buffer[offset + 1 .. offset + 1 + size]).unwrap().to_string());
+            offset += size + 1;
+        }
+
+        let rrtype: u16 = (buffer[offset] as u16) << 8 | buffer[offset+1] as u16;
+        offset += 2;
+
+        let class: u16 = (buffer[offset] as u16) << 8 | buffer[offset+1] as u16;
+        offset += 2;
+
+        questions.push(Question{
+            name: name,
+            rrtype: rrtype,
+            class: class,
+        })
+    }
 
     Message {
         id: id,
@@ -38,6 +78,7 @@ fn unpack(buffer: &[u8]) -> Message {
         answer_count: answer_count,
         ns_count: ns_count,
         ar_count: ar_count,
+        questions: questions,
     }
 }
 
