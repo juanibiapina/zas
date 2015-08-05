@@ -42,13 +42,14 @@ fn unpack(buffer: &[u8]) -> Message {
 
         loop {
             let size: usize = buffer[offset] as usize;
+            offset += 1;
 
             if size == 0 {
                 break;
             }
 
-            name.push(str::from_utf8(&buffer[offset + 1 .. offset + 1 + size]).unwrap().to_string());
-            offset += size + 1;
+            name.push(str::from_utf8(&buffer[offset .. offset + size]).unwrap().to_string());
+            offset += size;
         }
 
         let rrtype: u16 = (buffer[offset] as u16) << 8 | buffer[offset+1] as u16;
@@ -114,6 +115,24 @@ fn pack(message: &Message) -> Vec<u8> {
     buffer.push((message.ar_count >> 8) as u8);
     buffer.push(message.ar_count as u8);
 
+    for question in &message.questions {
+        for part in &question.name {
+            buffer.push(part.len() as u8);
+            let bytes = part.to_owned().into_bytes();
+            for byte in &bytes {
+                buffer.push(*byte);
+            }
+        }
+
+        buffer.push(0 as u8);
+
+        buffer.push((question.rrtype >> 8) as u8);
+        buffer.push(question.rrtype as u8);
+
+        buffer.push((question.class >> 8) as u8);
+        buffer.push(question.class as u8);
+    }
+
     buffer
 }
 
@@ -125,7 +144,7 @@ fn main() {
 
     let query_message = unpack(&buffer[..size]);
 
-    let answer_message = Message { query_response: 1, ..query_message };
+    let answer_message = Message { query_response: 0, ..query_message };
 
     let result = pack(&answer_message);
 
