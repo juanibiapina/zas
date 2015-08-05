@@ -7,6 +7,15 @@ struct Question {
     class: u16,
 }
 
+struct Answer {
+    name: Vec<String>,
+    rrtype: u16,
+    class: u16,
+    ttl: u32,
+    length: u16,
+    data: Vec<u8>,
+}
+
 struct Message {
     id: u16, // 2 bytes
     query_response: u16, // 1 bit
@@ -23,6 +32,7 @@ struct Message {
     ar_count: u16, // 2 bytes
 
     questions: Vec<Question>,
+    answers: Vec<Answer>,
 }
 
 fn unpack(buffer: &[u8]) -> Message {
@@ -80,6 +90,7 @@ fn unpack(buffer: &[u8]) -> Message {
         ns_count: ns_count,
         ar_count: ar_count,
         questions: questions,
+        answers: Vec::new(), // TODO parse answers
     }
 }
 
@@ -133,6 +144,36 @@ fn pack(message: &Message) -> Vec<u8> {
         buffer.push(question.class as u8);
     }
 
+    for answer in &message.answers {
+        for part in &answer.name {
+            buffer.push(part.len() as u8);
+            let bytes = part.to_owned().into_bytes();
+            for byte in &bytes {
+                buffer.push(*byte);
+            }
+        }
+
+        buffer.push(0 as u8);
+
+        buffer.push((answer.rrtype >> 8) as u8);
+        buffer.push(answer.rrtype as u8);
+
+        buffer.push((answer.class >> 8) as u8);
+        buffer.push(answer.class as u8);
+
+        buffer.push(((answer.ttl & (256 << 24)) >> 24) as u8);
+        buffer.push(((answer.ttl & (256 << 16)) >> 16) as u8);
+        buffer.push(((answer.ttl & (256 << 8)) >> 8) as u8);
+        buffer.push(((answer.ttl & (256 << 0)) >> 0) as u8);
+
+        buffer.push((answer.length >> 8) as u8);
+        buffer.push(answer.length as u8);
+
+        for byte in &answer.data {
+            buffer.push(*byte);
+        }
+    }
+
     buffer
 }
 
@@ -144,7 +185,22 @@ fn main() {
 
     let query_message = unpack(&buffer[..size]);
 
-    let answer_message = Message { query_response: 0, ..query_message };
+    let mut answers = Vec::new();
+    answers.push(Answer{
+        name: vec!("app".to_string(), "dev".to_string()),
+        rrtype: 1,
+        class: 1,
+        ttl: 0,
+        length: 4,
+        data: vec!(127, 0, 0, 1),
+    });
+
+    let answer_message = Message {
+        query_response: 1,
+        answer_count: 1,
+        answers: answers,
+        ..query_message
+    };
 
     let result = pack(&answer_message);
 
