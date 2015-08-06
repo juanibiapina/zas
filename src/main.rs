@@ -185,22 +185,33 @@ fn main() {
 
     let query_message = unpack(&buffer[..size]);
 
-    let mut answers = Vec::new();
-    answers.push(Answer{
-        name: query_message.questions[0].name.clone(),
-        rrtype: 1,
-        class: 1,
-        ttl: 0,
-        length: 4,
-        data: vec!(127, 0, 0, 1),
-    });
+    let answer_message: Message;
 
-    let answer_message = Message {
-        query_response: 1,
-        answer_count: 1,
-        answers: answers,
-        ..query_message
-    };
+    if query_message.questions[0].name.last().unwrap() == "dev" {
+        let mut answers = Vec::new();
+        answers.push(Answer{
+            name: query_message.questions[0].name.clone(),
+            rrtype: 1,
+            class: 1,
+            ttl: 0,
+            length: 4,
+            data: vec!(127, 0, 0, 1),
+        });
+
+        answer_message = Message {
+            query_response: 1,
+            answer_count: 1,
+            answers: answers,
+            ..query_message
+        };
+    } else {
+        answer_message = Message {
+            query_response: 1,
+            answer_count: 0,
+            error_code: 3,
+            ..query_message
+        };
+    }
 
     let result = pack(&answer_message);
 

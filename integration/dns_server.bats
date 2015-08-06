@@ -27,3 +27,9 @@ teardown() {
   [ "$domain" = "anything_asdfasdf.dev" ]
   [ "$ip" = "127.0.0.1" ]
 }
+
+@test "does not know any other domains" {
+  response="$(dig google.com @127.0.0.1 -p $SERVER_PORT +short +retry=0)"
+
+  [ "$response" = "" ]
+}
