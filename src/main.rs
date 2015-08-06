@@ -187,7 +187,7 @@ fn main() {
 
     let mut answers = Vec::new();
     answers.push(Answer{
-        name: vec!("app".to_string(), "dev".to_string()),
+        name: query_message.questions[0].name.clone(),
         rrtype: 1,
         class: 1,
         ttl: 0,
