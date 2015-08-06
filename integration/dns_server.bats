@@ -28,6 +28,13 @@ teardown() {
   [ "$ip" = "127.0.0.1" ]
 }
 
+@test "accepts more then one request" {
+  dig app.dev @127.0.0.1 -p $SERVER_PORT +nocomment +retry=0
+  dig app.dev @127.0.0.1 -p $SERVER_PORT +nocomment +retry=0
+  dig app.dev @127.0.0.1 -p $SERVER_PORT +nocomment +retry=0
+  dig app.dev @127.0.0.1 -p $SERVER_PORT +nocomment +retry=0
+}
+
 @test "does not know any other domains" {
   response="$(dig google.com @127.0.0.1 -p $SERVER_PORT +short +retry=0)"
 
