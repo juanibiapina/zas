@@ -1,5 +1,5 @@
-use question::Question;
-use answer::Answer;
+use dns::question::Question;
+use dns::answer::Answer;
 
 pub struct Message {
     pub id: u16, // 2 bytes

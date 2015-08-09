@@ -3,9 +3,9 @@ extern crate zas;
 use std::net::UdpSocket;
 use std::str;
 
-use zas::question::Question;
-use zas::answer::Answer;
-use zas::message::Message;
+use zas::dns::question::Question;
+use zas::dns::answer::Answer;
+use zas::dns::message::Message;
 
 fn unpack(buffer: &[u8]) -> Message {
     let id: u16 = (buffer[0] as u16) << 8 | buffer[1] as u16;
