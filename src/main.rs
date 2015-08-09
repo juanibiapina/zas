@@ -1,39 +1,11 @@
+extern crate zas;
+
 use std::net::UdpSocket;
 use std::str;
 
-struct Question {
-    name: Vec<String>,
-    rrtype: u16,
-    class: u16,
-}
-
-struct Answer {
-    name: Vec<String>,
-    rrtype: u16,
-    class: u16,
-    ttl: u32,
-    length: u16,
-    data: Vec<u8>,
-}
-
-struct Message {
-    id: u16, // 2 bytes
-    query_response: u16, // 1 bit
-    operation_code: u16, // 4 bits
-    authoritative_answer: u16, // 1 bit
-    truncation_flag: u16, // 1 bit
-    recursion_desired: u16, // 1 bit
-    recursion_available: u16, // 1 bit
-    unused: u16, // 3 bits
-    error_code: u16, // 4 bits
-    question_count: u16, // 2 bytes
-    answer_count: u16, // 2 bytes
-    ns_count: u16, // 2 bytes
-    ar_count: u16, // 2 bytes
-
-    questions: Vec<Question>,
-    answers: Vec<Answer>,
-}
+use zas::question::Question;
+use zas::answer::Answer;
+use zas::message::Message;
 
 fn unpack(buffer: &[u8]) -> Message {
     let id: u16 = (buffer[0] as u16) << 8 | buffer[1] as u16;
