@@ -1,5 +1,7 @@
 extern crate zas;
 
 fn main() {
-    zas::dns::server::run();
+    let dns_server_thread = zas::dns::server::run();
+
+    dns_server_thread.join().unwrap();
 }
