@@ -6,10 +6,11 @@ use dns::message::Message;
 
 pub fn run() -> thread::JoinHandle<u8> {
     thread::spawn(move || {
-        loop {
-            let socket = UdpSocket::bind("127.0.0.1:12043").unwrap();
+        let socket = UdpSocket::bind("127.0.0.1:12043").unwrap();
 
-            let mut buffer: [u8; 512] = [0; 512];
+        let mut buffer: [u8; 512] = [0; 512];
+
+        loop {
             let (size, source) = socket.recv_from(&mut buffer).unwrap();
 
             let query_message = Message::unpack(&buffer[..size]);
@@ -18,6 +19,7 @@ pub fn run() -> thread::JoinHandle<u8> {
 
             if query_message.questions[0].name.last().unwrap() == "dev" {
                 let mut answers = Vec::new();
+
                 answers.push(Answer{
                     name: query_message.questions[0].name.clone(),
                     rrtype: 1,
@@ -49,8 +51,6 @@ pub fn run() -> thread::JoinHandle<u8> {
             let size = answer_message.pack(&mut buffer);
 
             socket.send_to(&buffer[..size], &source).unwrap();
-
-            drop(socket);
         }
     })
 }
