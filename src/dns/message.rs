@@ -100,19 +100,11 @@ impl Message {
         offset += 2;
 
         for question in self.questions.iter() {
-            match question.pack(buffer, offset) {
-                updated_offset => {
-                    offset = updated_offset;
-                }
-            }
+            offset = question.pack(buffer, offset);
         }
 
         for answer in self.answers.iter() {
-            match answer.pack(buffer, offset) {
-                updated_offset => {
-                    offset = updated_offset;
-                }
-            }
+            offset = answer.pack(buffer, offset);
         }
 
         offset
