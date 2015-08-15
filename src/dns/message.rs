@@ -108,40 +108,10 @@ impl Message {
         }
 
         for answer in self.answers.iter() {
-            for part in answer.name.iter() {
-                buffer[offset] = part.len() as u8;
-                offset += 1;
-
-                for byte in part.to_owned().into_bytes().iter() {
-                    buffer[offset] = *byte;
-                    offset += 1;
+            match answer.pack(buffer, offset) {
+                updated_offset => {
+                    offset = updated_offset;
                 }
-            }
-
-            buffer[offset] = 0 as u8;
-            offset += 1;
-
-            buffer[offset] = (answer.rrtype >> 8) as u8;
-            buffer[offset + 1] = answer.rrtype as u8;
-            offset += 2;
-
-            buffer[offset] = (answer.class >> 8) as u8;
-            buffer[offset + 1] = answer.class as u8;
-            offset += 2;
-
-            buffer[offset] = ((answer.ttl & (256 << 24)) >> 24) as u8;
-            buffer[offset + 1] = ((answer.ttl & (256 << 16)) >> 16) as u8;
-            buffer[offset + 2] = ((answer.ttl & (256 << 8)) >> 8) as u8;
-            buffer[offset + 3] = ((answer.ttl & (256 << 0)) >> 0) as u8;
-            offset += 4;
-
-            buffer[offset] = (answer.length >> 8) as u8;
-            buffer[offset + 1] = answer.length as u8;
-            offset += 2;
-
-            for byte in &answer.data {
-                buffer[offset] = *byte;
-                offset += 1;
             }
         }
 
