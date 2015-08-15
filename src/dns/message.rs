@@ -93,11 +93,11 @@ impl Message {
         buffer.push((self.ar_count >> 8) as u8);
         buffer.push(self.ar_count as u8);
 
-        for question in &self.questions {
-            for part in &question.name {
+        for question in self.questions.iter() {
+            for part in question.name.iter() {
                 buffer.push(part.len() as u8);
-                let bytes = part.to_owned().into_bytes();
-                for byte in &bytes {
+
+                for byte in part.to_owned().into_bytes().iter() {
                     buffer.push(*byte);
                 }
             }
@@ -111,11 +111,11 @@ impl Message {
             buffer.push(question.class as u8);
         }
 
-        for answer in &self.answers {
-            for part in &answer.name {
+        for answer in self.answers.iter() {
+            for part in answer.name.iter() {
                 buffer.push(part.len() as u8);
-                let bytes = part.to_owned().into_bytes();
-                for byte in &bytes {
+
+                for byte in part.to_owned().into_bytes().iter() {
                     buffer.push(*byte);
                 }
             }
