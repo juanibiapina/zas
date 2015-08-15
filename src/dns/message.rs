@@ -61,11 +61,12 @@ impl Message {
         }
     }
 
-    pub fn pack(&self) -> Vec<u8> {
-        let mut buffer: Vec<u8> = Vec::new();
+    pub fn pack(&self, buffer: &mut [u8]) -> usize {
+        let mut offset: usize = 0;
 
-        buffer.push((self.id >> 8) as u8);
-        buffer.push(self.id as u8);
+        buffer[offset] = (self.id >> 8) as u8;
+        buffer[offset + 1] = self.id as u8;
+        offset += 2;
 
         let mut body: u16 = 0;
 
@@ -78,69 +79,87 @@ impl Message {
         body = body | self.unused << 4;
         body = body | self.error_code;
 
-        buffer.push((body >> 8) as u8);
-        buffer.push(body as u8);
+        buffer[offset] = (body >> 8) as u8;
+        buffer[offset + 1] = body as u8;
+        offset += 2;
 
-        buffer.push((self.question_count >> 8) as u8);
-        buffer.push(self.question_count as u8);
+        buffer[offset] = (self.question_count >> 8) as u8;
+        buffer[offset + 1] = self.question_count as u8;
+        offset += 2;
 
-        buffer.push((self.answer_count >> 8) as u8);
-        buffer.push(self.answer_count as u8);
+        buffer[offset] = (self.answer_count >> 8) as u8;
+        buffer[offset + 1] = self.answer_count as u8;
+        offset += 2;
 
-        buffer.push((self.ns_count >> 8) as u8);
-        buffer.push(self.ns_count as u8);
+        buffer[offset] = (self.ns_count >> 8) as u8;
+        buffer[offset + 1] = self.ns_count as u8;
+        offset += 2;
 
-        buffer.push((self.ar_count >> 8) as u8);
-        buffer.push(self.ar_count as u8);
+        buffer[offset] = (self.ar_count >> 8) as u8;
+        buffer[offset + 1] = self.ar_count as u8;
+        offset += 2;
 
         for question in self.questions.iter() {
             for part in question.name.iter() {
-                buffer.push(part.len() as u8);
+                buffer[offset] = part.len() as u8;
+                offset += 1;
 
                 for byte in part.to_owned().into_bytes().iter() {
-                    buffer.push(*byte);
+                    buffer[offset] = *byte;
+                    offset += 1;
                 }
             }
 
-            buffer.push(0 as u8);
+            buffer[offset] = 0 as u8;
+            offset += 1;
 
-            buffer.push((question.rrtype >> 8) as u8);
-            buffer.push(question.rrtype as u8);
+            buffer[offset] = (question.rrtype >> 8) as u8;
+            buffer[offset + 1] = question.rrtype as u8;
+            offset += 2;
 
-            buffer.push((question.class >> 8) as u8);
-            buffer.push(question.class as u8);
+            buffer[offset] = (question.class >> 8) as u8;
+            buffer[offset + 1] = question.class as u8;
+            offset += 2;
         }
 
         for answer in self.answers.iter() {
             for part in answer.name.iter() {
-                buffer.push(part.len() as u8);
+                buffer[offset] = part.len() as u8;
+                offset += 1;
 
                 for byte in part.to_owned().into_bytes().iter() {
-                    buffer.push(*byte);
+                    buffer[offset] = *byte;
+                    offset += 1;
                 }
             }
 
-            buffer.push(0 as u8);
+            buffer[offset] = 0 as u8;
+            offset += 1;
 
-            buffer.push((answer.rrtype >> 8) as u8);
-            buffer.push(answer.rrtype as u8);
+            buffer[offset] = (answer.rrtype >> 8) as u8;
+            buffer[offset + 1] = answer.rrtype as u8;
+            offset += 2;
 
-            buffer.push((answer.class >> 8) as u8);
-            buffer.push(answer.class as u8);
+            buffer[offset] = (answer.class >> 8) as u8;
+            buffer[offset + 1] = answer.class as u8;
+            offset += 2;
 
-            buffer.push(((answer.ttl & (256 << 24)) >> 24) as u8);
-            buffer.push(((answer.ttl & (256 << 16)) >> 16) as u8);
-            buffer.push(((answer.ttl & (256 << 8)) >> 8) as u8);
-            buffer.push(((answer.ttl & (256 << 0)) >> 0) as u8);
+            buffer[offset] = ((answer.ttl & (256 << 24)) >> 24) as u8;
+            buffer[offset + 1] = ((answer.ttl & (256 << 16)) >> 16) as u8;
+            buffer[offset + 2] = ((answer.ttl & (256 << 8)) >> 8) as u8;
+            buffer[offset + 3] = ((answer.ttl & (256 << 0)) >> 0) as u8;
+            offset += 4;
 
-            buffer.push((answer.length >> 8) as u8);
-            buffer.push(answer.length as u8);
+            buffer[offset] = (answer.length >> 8) as u8;
+            buffer[offset + 1] = answer.length as u8;
+            offset += 2;
 
             for byte in &answer.data {
-                buffer.push(*byte);
+                buffer[offset] = *byte;
+                offset += 1;
             }
         }
 
-        buffer
+        offset
     }
 }

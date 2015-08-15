@@ -46,9 +46,9 @@ pub fn run() -> thread::JoinHandle<u8> {
                 };
             }
 
-            let result = answer_message.pack();
+            let size = answer_message.pack(&mut buffer);
 
-            socket.send_to(&result, &source).unwrap();
+            socket.send_to(&buffer[..size], &source).unwrap();
 
             drop(socket);
         }
