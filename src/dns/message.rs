@@ -55,40 +55,7 @@ impl Message {
     pub fn pack(&self, buffer: &mut [u8]) -> usize {
         let mut offset: usize = 0;
 
-        buffer[offset] = (self.header.id >> 8) as u8;
-        buffer[offset + 1] = self.header.id as u8;
-        offset += 2;
-
-        let mut body: u16 = 0;
-
-        body = body | self.header.query_response << 15;
-        body = body | self.header.operation_code << 11;
-        body = body | self.header.authoritative_answer << 10;
-        body = body | self.header.truncation_flag << 9;
-        body = body | self.header.recursion_desired << 8;
-        body = body | self.header.recursion_available << 7;
-        body = body | self.header.unused << 4;
-        body = body | self.header.error_code;
-
-        buffer[offset] = (body >> 8) as u8;
-        buffer[offset + 1] = body as u8;
-        offset += 2;
-
-        buffer[offset] = (self.header.question_count >> 8) as u8;
-        buffer[offset + 1] = self.header.question_count as u8;
-        offset += 2;
-
-        buffer[offset] = (self.header.answer_count >> 8) as u8;
-        buffer[offset + 1] = self.header.answer_count as u8;
-        offset += 2;
-
-        buffer[offset] = (self.header.ns_count >> 8) as u8;
-        buffer[offset + 1] = self.header.ns_count as u8;
-        offset += 2;
-
-        buffer[offset] = (self.header.ar_count >> 8) as u8;
-        buffer[offset + 1] = self.header.ar_count as u8;
-        offset += 2;
+        offset = self.header.pack(buffer, offset);
 
         for question in self.questions.iter() {
             offset = question.pack(buffer, offset);
