@@ -1,6 +1,7 @@
 use std::thread;
 use std::net::UdpSocket;
 
+use dns::header::Header;
 use dns::answer::Answer;
 use dns::message::Message;
 
@@ -30,20 +31,26 @@ pub fn run() -> thread::JoinHandle<u8> {
                 });
 
                 answer_message = Message {
-                    query_response: 1,
-                    answer_count: 1,
-                    ns_count: 0,
-                    ar_count: 0,
+                    header: Header {
+                        query_response: 1,
+                        answer_count: 1,
+                        ns_count: 0,
+                        ar_count: 0,
+                        ..query_message.header
+                    },
                     answers: answers,
                     ..query_message
                 };
             } else {
                 answer_message = Message {
-                    query_response: 1,
-                    answer_count: 0,
-                    ns_count: 0,
-                    ar_count: 0,
-                    error_code: 3,
+                    header: Header {
+                        query_response: 1,
+                        answer_count: 0,
+                        ns_count: 0,
+                        ar_count: 0,
+                        error_code: 3,
+                        ..query_message.header
+                    },
                     ..query_message
                 };
             }
