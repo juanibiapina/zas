@@ -1,5 +1,3 @@
-use std::str;
-
 use dns::question::Question;
 use dns::answer::Answer;
 
@@ -36,31 +34,12 @@ impl Message {
         let mut questions = Vec::with_capacity(question_count as usize);
 
         for _ in 0..question_count {
-            let mut name = Vec::new();
-
-            loop {
-                let size: usize = buffer[offset] as usize;
-                offset += 1;
-
-                if size == 0 {
-                    break;
+            match Question::unpack(buffer, offset) {
+                (question, updated_offset) => {
+                    questions.push(question);
+                    offset = updated_offset;
                 }
-
-                name.push(str::from_utf8(&buffer[offset .. offset + size]).unwrap().to_string());
-                offset += size;
             }
-
-            let rrtype: u16 = (buffer[offset] as u16) << 8 | buffer[offset+1] as u16;
-            offset += 2;
-
-            let class: u16 = (buffer[offset] as u16) << 8 | buffer[offset+1] as u16;
-            offset += 2;
-
-            questions.push(Question{
-                name: name,
-                rrtype: rrtype,
-                class: class,
-            })
         }
 
         Message {
