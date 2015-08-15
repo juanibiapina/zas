@@ -9,6 +9,7 @@ setup() {
 
 teardown() {
   kill -9 "$pid" 1>&2 || true
+  wait "$pid" 2>/dev/null || true
 }
 
 @test "resolves app.dev domain to 127.0.0.1" {
