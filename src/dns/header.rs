@@ -15,6 +15,31 @@ pub struct Header {
 }
 
 impl Header {
+    pub fn unpack(buffer: &[u8], offset: usize) -> (Header, usize) {
+        let id: u16 = (buffer[offset + 0] as u16) << 8 | buffer[offset + 1] as u16;
+        let body: u16 = (buffer[offset + 2] as u16) << 8 | buffer[offset + 3] as u16;
+        let question_count: u16 = (buffer[offset + 4] as u16) << 8 | buffer[offset + 5] as u16;
+        let answer_count: u16 = (buffer[offset + 6] as u16) << 8 | buffer[offset + 7] as u16;
+        let ns_count: u16 = (buffer[offset + 8] as u16) << 8 | buffer[offset + 9] as u16;
+        let ar_count: u16 = (buffer[offset + 10] as u16) << 8 | buffer[offset + 11] as u16;
+
+        (Header {
+            id: id,
+            query_response: (body & (1 << 15)) >> 15,
+            operation_code: (body & (15 << 11)) >> 11,
+            authoritative_answer: (body & (1 >> 10)) >> 10,
+            truncation_flag: (body & (1 >> 9)) >> 9,
+            recursion_desired: (body & (1 >> 8)) >> 8,
+            recursion_available: (body & (1 >> 7)) >> 7,
+            unused: (body & (7 << 4)) >> 4,
+            error_code: (body & (15 << 0)) >> 0,
+            question_count: question_count,
+            answer_count: answer_count,
+            ns_count: ns_count,
+            ar_count: ar_count,
+        }, offset + 12)
+    }
+
     pub fn pack(&self, buffer: &mut [u8], offset: usize) -> usize {
         let mut offset: usize = offset;
 
