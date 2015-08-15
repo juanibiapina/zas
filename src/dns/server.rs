@@ -30,6 +30,8 @@ pub fn run() -> thread::JoinHandle<u8> {
                 answer_message = Message {
                     query_response: 1,
                     answer_count: 1,
+                    ns_count: 0,
+                    ar_count: 0,
                     answers: answers,
                     ..query_message
                 };
@@ -37,6 +39,8 @@ pub fn run() -> thread::JoinHandle<u8> {
                 answer_message = Message {
                     query_response: 1,
                     answer_count: 0,
+                    ns_count: 0,
+                    ar_count: 0,
                     error_code: 3,
                     ..query_message
                 };
