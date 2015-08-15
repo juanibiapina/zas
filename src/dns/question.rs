@@ -35,5 +35,32 @@ impl Question {
             class: class,
         }, offset)
     }
+
+    pub fn pack(&self, buffer: &mut [u8], offset: usize) -> usize {
+        let mut offset: usize = offset;
+
+        for part in self.name.iter() {
+            buffer[offset] = part.len() as u8;
+            offset += 1;
+
+            for byte in part.to_owned().into_bytes().iter() {
+                buffer[offset] = *byte;
+                offset += 1;
+            }
+        }
+
+        buffer[offset] = 0 as u8;
+        offset += 1;
+
+        buffer[offset] = (self.rrtype >> 8) as u8;
+        buffer[offset + 1] = self.rrtype as u8;
+        offset += 2;
+
+        buffer[offset] = (self.class >> 8) as u8;
+        buffer[offset + 1] = self.class as u8;
+        offset += 2;
+
+        offset
+    }
 }
 

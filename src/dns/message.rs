@@ -100,26 +100,11 @@ impl Message {
         offset += 2;
 
         for question in self.questions.iter() {
-            for part in question.name.iter() {
-                buffer[offset] = part.len() as u8;
-                offset += 1;
-
-                for byte in part.to_owned().into_bytes().iter() {
-                    buffer[offset] = *byte;
-                    offset += 1;
+            match question.pack(buffer, offset) {
+                updated_offset => {
+                    offset = updated_offset;
                 }
             }
-
-            buffer[offset] = 0 as u8;
-            offset += 1;
-
-            buffer[offset] = (question.rrtype >> 8) as u8;
-            buffer[offset + 1] = question.rrtype as u8;
-            offset += 2;
-
-            buffer[offset] = (question.class >> 8) as u8;
-            buffer[offset + 1] = question.class as u8;
-            offset += 2;
         }
 
         for answer in self.answers.iter() {
