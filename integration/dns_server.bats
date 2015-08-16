@@ -29,7 +29,7 @@ teardown() {
   [ "$ip" = "127.0.0.1" ]
 }
 
-@test "accepts more then one request" {
+@test "accepts more than one request" {
   dig app.dev @127.0.0.1 -p $DNS_PORT +nocomment +retry=0
   dig app.dev @127.0.0.1 -p $DNS_PORT +nocomment +retry=0
   dig app.dev @127.0.0.1 -p $DNS_PORT +nocomment +retry=0
