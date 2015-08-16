@@ -1,6 +1,7 @@
-before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get install -y dnsutils
+addons:
+  apt:
+    packages:
+      - dnsutils
 install: git clone https://github.com/sstephenson/bats.git
 before_script:
   - export PATH=$PWD/bats/bin:$PATH
