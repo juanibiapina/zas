@@ -16,7 +16,7 @@ teardown() {
 }
 
 @test "http proxy: brings up an application and forwards get requests" {
-  response="$(curl -s -H 'Host: get.dev' localhost:12044)"
+  response="$(curl -s -H 'Host: get.dev' localhost:$HTTP_PORT)"
 
   [ "$response" = "MOCK GET" ]
 }
