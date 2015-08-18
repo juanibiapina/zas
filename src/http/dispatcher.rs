@@ -1,6 +1,5 @@
 extern crate hyper;
 
-use std::env;
 use std::thread;
 use std::io::Read;
 use std::process::Command;
@@ -15,22 +14,24 @@ use self::hyper::server::Handler;
 use self::hyper::server::Request;
 use self::hyper::server::Response;
 
-pub struct Dispatcher;
+pub struct Dispatcher {
+    app_home: String,
+}
 
 impl Dispatcher {
-    pub fn new() -> Dispatcher {
-        Dispatcher
+    pub fn new(app_home: String) -> Dispatcher {
+        Dispatcher {
+            app_home: app_home,
+        }
     }
 }
 
 impl Handler for Dispatcher {
     fn handle(&self, request: Request, response: Response<Fresh>) {
-        let zas_home = env::var("ZAS_HOME").unwrap();
-
         let host: String = request.headers.get::<Host>().unwrap().hostname.to_string();
         let app_name = host.split(".").collect::<Vec<_>>().first().unwrap().to_string();
 
-        let mut path = PathBuf::from(zas_home);
+        let mut path = PathBuf::from(&self.app_home);
         path.push(app_name);
 
         let app_port = "12045";
