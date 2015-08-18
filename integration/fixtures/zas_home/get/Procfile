@@ -1,1 +1,1 @@
-web: ./server 12045
+web: ./server $PORT

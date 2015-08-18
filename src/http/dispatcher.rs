@@ -33,11 +33,14 @@ impl Handler for Dispatcher {
         let mut path = PathBuf::from(zas_home);
         path.push(app_name);
 
+        let app_port = "12045";
+
         let mut child_process = Command::new("foreman")
             .arg("start")
             .stdout(Stdio::null())
             .stderr(Stdio::null())
             .current_dir(path.as_path())
+            .env("PORT", &app_port)
             .spawn().unwrap();
 
         thread::sleep_ms(1000);
