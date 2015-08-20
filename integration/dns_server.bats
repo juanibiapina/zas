@@ -3,6 +3,7 @@
 DNS_PORT=12043
 
 setup() {
+  export ZAS_HOME="${FIXTURES_DIR}/zas_home"
   target/debug/zas 1>&2 &
   pid="$!"
 }
