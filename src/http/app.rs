@@ -1,7 +1,6 @@
 use std::path::PathBuf;
 use std::process::Child;
 use std::process::Command;
-use std::process::Stdio;
 
 pub struct App {
     pub name: String,

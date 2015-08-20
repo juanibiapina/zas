@@ -1,7 +1,6 @@
 extern crate hyper;
 
 use std::io::Read;
-use std::thread;
 
 use self::hyper::net::Fresh;
 use self::hyper::client::Client;
