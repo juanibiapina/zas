@@ -16,10 +16,10 @@ teardown() {
   wait "$pid" 2>/dev/null || true
 }
 
-@test "http proxy: proxies to 'get' app" {
+@test "http proxy: proxies a GET to 'simple' app" {
   sleep 1
 
-  response="$(curl -s -H 'Host: get.dev' localhost:$HTTP_PORT)"
+  response="$(curl -s -H 'Host: simple.dev' localhost:$HTTP_PORT)"
 
-  [ "$response" = "MOCK GET" ]
+  [ "$response" = "MOCK SIMPLE GET" ]
 }
