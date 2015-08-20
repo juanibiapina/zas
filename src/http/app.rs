@@ -16,8 +16,6 @@ impl App {
 
         let child_process = Command::new("foreman")
             .arg("start")
-            .stdout(Stdio::null())
-            .stderr(Stdio::null())
             .current_dir(path_buf.as_path())
             .env("PORT", port)
             .spawn().unwrap();
