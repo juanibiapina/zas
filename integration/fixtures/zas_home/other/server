@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+set -e
+set -u
+
+port="$1"
+
+echo "Server listening on port $port"
+
+while true; do
+  echo -e "HTTP/1.1 200 OK\n\nMOCK OTHER GET" | nc -l localhost $port
+done

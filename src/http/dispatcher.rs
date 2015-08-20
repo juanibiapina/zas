@@ -1,6 +1,8 @@
 extern crate hyper;
 
 use std::io::Read;
+use std::collections::HashMap;
+use std::fmt;
 
 use self::hyper::net::Fresh;
 use self::hyper::client::Client;
@@ -13,13 +15,13 @@ use self::hyper::server::Response;
 use http::app::App;
 
 pub struct Dispatcher {
-    pub app: App,
+    pub apps: HashMap<String, App>,
 }
 
 impl Dispatcher {
-    pub fn new(app: App) -> Dispatcher {
+    pub fn new(apps: HashMap<String, App>) -> Dispatcher {
         Dispatcher {
-            app: app,
+            apps: apps,
         }
     }
 }
@@ -31,7 +33,11 @@ impl Handler for Dispatcher {
 
         let client = Client::new();
 
-        let mut app_response = client.get("http://localhost:12050")
+        let app = self.apps.get(&app_name).unwrap();
+
+        let url = fmt::format(format_args!("http://localhost:{}", &app.port));
+
+        let mut app_response = client.get(&url)
             .header(Connection::close())
             .send().unwrap();
 

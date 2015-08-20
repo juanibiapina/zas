@@ -23,3 +23,11 @@ teardown() {
 
   [ "$response" = "MOCK SIMPLE GET" ]
 }
+
+@test "http proxy: proxies a GET to 'other' app" {
+  sleep 1
+
+  response="$(curl -s -H 'Host: other.dev' localhost:$HTTP_PORT)"
+
+  [ "$response" = "MOCK OTHER GET" ]
+}

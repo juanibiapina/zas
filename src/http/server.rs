@@ -2,6 +2,7 @@ extern crate hyper;
 
 use std::env;
 use std::thread;
+use std::collections::HashMap;
 
 use self::hyper::server;
 
@@ -25,9 +26,11 @@ impl Server {
         thread::spawn(move || {
             let app_home = env::var("ZAS_HOME").unwrap();
 
-            let simple_app = App::new("simple", "12050", app_home);
+            let mut apps = HashMap::new();
+            apps.insert("simple".to_string(), App::new("simple", "12050", &app_home));
+            apps.insert("other".to_string(), App::new("other", "12051", &app_home));
 
-            let dispatcher = Dispatcher::new(simple_app);
+            let dispatcher = Dispatcher::new(apps);
 
             server::Server::http("127.0.0.1:12044").unwrap().handle(dispatcher).unwrap();
         })
