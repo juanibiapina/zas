@@ -16,7 +16,7 @@ teardown() {
   wait "$pid" 2>/dev/null || true
 }
 
-@test "http proxy: brings up an application and forwards get requests" {
+@test "http proxy: proxies to 'get' app" {
   sleep 1
 
   response="$(curl -s -H 'Host: get.dev' localhost:$HTTP_PORT)"
