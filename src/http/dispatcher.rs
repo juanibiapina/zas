@@ -31,11 +31,11 @@ impl Handler for Dispatcher {
         let host: String = request.headers.get::<Host>().unwrap().hostname.to_string();
         let app_name = host.split(".").collect::<Vec<_>>().first().unwrap().to_string();
 
-        let client = Client::new();
-
         let app = self.apps.get(&app_name).unwrap();
 
         let url = fmt::format(format_args!("http://localhost:{}", &app.port));
+
+        let client = Client::new();
 
         let mut app_response = client.get(&url)
             .header(Connection::close())
