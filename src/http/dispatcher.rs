@@ -4,6 +4,7 @@ use std::env;
 use std::thread;
 use std::io::Read;
 use std::sync::Mutex;
+use std::process::Command;
 
 use self::hyper::net::Fresh;
 use self::hyper::client::Client;
@@ -44,8 +45,8 @@ impl Handler for Dispatcher {
                 let next_port = app_manager.next_port;
                 app_manager.apps.insert(app_name.to_string(), App::new(app_name.to_string(), next_port, &app_home));
                 app_manager.next_port = next_port + 1;
-                // check that the port is open instead of sleep
-                thread::sleep_ms(1000);
+
+                block_until_port_open(next_port);
             }
 
             let app = app_manager.apps.get(&app_name).unwrap();
@@ -64,5 +65,11 @@ impl Handler for Dispatcher {
         app_response.read_to_string(&mut body).unwrap();
 
         response.send(&body.into_bytes()).unwrap();
+    }
+}
+
+fn block_until_port_open(port: u16) {
+    while !Command::new("nc").arg("-z").arg("localhost").arg(format!("{}", port)).status().unwrap().success() {
+        thread::sleep_ms(1000);
     }
 }
