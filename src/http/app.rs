@@ -1,3 +1,4 @@
+use std::thread;
 use std::path::PathBuf;
 use std::process::Child;
 use std::process::Command;
@@ -19,9 +20,17 @@ impl App {
             .env("PORT", port.to_string())
             .spawn().unwrap();
 
+        sleep_until_port_open(port);
+
         App{
             port: port,
             process: child_process,
         }
+    }
+}
+
+fn sleep_until_port_open(port: u16) {
+    while !Command::new("nc").arg("-z").arg("localhost").arg(format!("{}", port)).status().unwrap().success() {
+        thread::sleep_ms(300);
     }
 }
