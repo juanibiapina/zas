@@ -14,13 +14,13 @@ teardown() {
   wait "$pid" 2>/dev/null || true
 }
 
-@test "resolves app.dev domain to 127.0.0.1" {
+@test "dns: resolves app.dev domain to 127.0.0.1" {
   response="$(dig app.dev @127.0.0.1 -p $DNS_PORT +short +retry=0)"
 
   [ "$response" = "127.0.0.1" ]
 }
 
-@test "resolves anything_asdfasdf.dev to 127.0.0.1" {
+@test "dns: resolves anything_asdfasdf.dev to 127.0.0.1" {
   response="$(dig anything_asdfasdf.dev @127.0.0.1 -p $DNS_PORT +nocomment +retry=0)"
 
   domain="$(echo "$response" | grep -v "^;" | grep "\.dev" | cut -d "	" -f 1)"
@@ -31,14 +31,14 @@ teardown() {
   [ "$ip" = "127.0.0.1" ]
 }
 
-@test "accepts more than one request" {
+@test "dns: accepts more than one request" {
   dig app.dev @127.0.0.1 -p $DNS_PORT +nocomment +retry=0
   dig app.dev @127.0.0.1 -p $DNS_PORT +nocomment +retry=0
   dig app.dev @127.0.0.1 -p $DNS_PORT +nocomment +retry=0
   dig app.dev @127.0.0.1 -p $DNS_PORT +nocomment +retry=0
 }
 
-@test "does not know any other domains" {
+@test "dns: does not know any other domains" {
   response="$(dig google.com @127.0.0.1 -p $DNS_PORT +short +retry=0)"
 
   [ "$response" = "" ]
