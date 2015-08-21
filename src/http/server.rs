@@ -1,7 +1,6 @@
 extern crate hyper;
 
 use std::thread;
-use std::collections::HashMap;
 
 use self::hyper::server;
 
