@@ -8,9 +8,9 @@ use http::app::App;
 const DEFAULT_APP_HOME: &'static str = "~/.zas";
 
 pub struct AppManager {
-    pub next_port: u16,
+    next_port: u16,
     app_home: String,
-    pub apps: HashMap<String, App>,
+    apps: HashMap<String, App>,
 }
 
 impl AppManager {
