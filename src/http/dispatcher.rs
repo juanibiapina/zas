@@ -3,7 +3,6 @@ extern crate hyper;
 use std::env;
 use std::thread;
 use std::io::Read;
-use std::collections::HashMap;
 use std::sync::Mutex;
 
 use self::hyper::net::Fresh;
@@ -15,17 +14,18 @@ use self::hyper::server::Request;
 use self::hyper::server::Response;
 
 use http::app::App;
+use http::app_manager::AppManager;
 
 const DEFAULT_APP_HOME: &'static str = "~/.zas";
 
 pub struct Dispatcher {
-    pub apps: Mutex<HashMap<String, App>>,
+    pub app_manager: Mutex<AppManager>,
 }
 
 impl Dispatcher {
-    pub fn new(apps: HashMap<String, App>) -> Dispatcher {
+    pub fn new(app_manager: AppManager) -> Dispatcher {
         Dispatcher {
-            apps: Mutex::new(apps),
+            app_manager: Mutex::new(app_manager),
         }
     }
 }
@@ -38,7 +38,8 @@ impl Handler for Dispatcher {
 
         let port: String;
         {
-            let mut apps = self.apps.lock().unwrap();
+            let mut app_manager = self.app_manager.lock().unwrap();
+            let mut apps = &mut app_manager.apps;
 
             if !apps.contains_key(&app_name) {
                 apps.insert(app_name.to_string(), App::new(app_name.to_string(), "12050", &app_home));

@@ -6,6 +6,7 @@ use std::collections::HashMap;
 use self::hyper::server;
 
 use http::dispatcher::Dispatcher;
+use http::app_manager::AppManager;
 
 pub struct Server {
     pub thread: thread::JoinHandle<()>,
@@ -22,10 +23,8 @@ impl Server {
 
     fn create_thread() -> thread::JoinHandle<()> {
         thread::spawn(move || {
-
-            let apps = HashMap::new();
-
-            let dispatcher = Dispatcher::new(apps);
+            let app_manager = AppManager::new();
+            let dispatcher = Dispatcher::new(app_manager);
 
             server::Server::http("127.0.0.1:12044").unwrap().handle(dispatcher).unwrap();
         })
