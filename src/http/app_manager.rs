@@ -27,7 +27,7 @@ impl AppManager {
     pub fn ensure_app_running(&mut self, app_name: &str) -> u16 {
         if !self.apps.contains_key(app_name) {
             let next_port = self.next_port;
-            self.apps.insert(app_name.to_string(), App::new(app_name.to_string(), next_port, &self.app_home));
+            self.apps.insert(app_name.to_string(), App::new(&app_name, next_port, &self.app_home));
             self.next_port = next_port + 1;
 
             block_until_port_open(next_port);

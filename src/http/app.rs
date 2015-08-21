@@ -10,7 +10,7 @@ pub struct App {
 }
 
 impl App {
-    pub fn new(name: String, port: u16, app_home: &str) -> App {
+    pub fn new(name: &str, port: u16, app_home: &str) -> App {
         let mut path_buf = PathBuf::from(app_home);
         path_buf.push(&name);
 
