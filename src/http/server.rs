@@ -9,6 +9,8 @@ use self::hyper::server;
 use http::dispatcher::Dispatcher;
 use http::app::App;
 
+const DEFAULT_APP_HOME: &'static str = "~/.zas";
+
 pub struct Server {
     pub thread: thread::JoinHandle<()>,
 }
@@ -24,7 +26,7 @@ impl Server {
 
     fn create_thread() -> thread::JoinHandle<()> {
         thread::spawn(move || {
-            let app_home = env::var("ZAS_HOME").unwrap();
+            let app_home = env::var("ZAS_HOME").unwrap_or(DEFAULT_APP_HOME.to_string());
 
             let mut apps = HashMap::new();
             apps.insert("simple".to_string(), App::new("simple", "12050", &app_home));
