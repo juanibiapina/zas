@@ -1,8 +1,7 @@
 #!/usr/bin/env bats
 
-load test_helper
-
-HTTP_PORT=12044
+load support/test_helper
+load support/config
 
 setup() {
   export ZAS_HOME="${FIXTURES_DIR}/zas_home"
