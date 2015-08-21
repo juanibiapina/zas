@@ -3,7 +3,6 @@ use std::process::Child;
 use std::process::Command;
 
 pub struct App {
-    pub name: String,
     pub port: u16,
     #[allow(dead_code)]
     process: Child,
@@ -21,7 +20,6 @@ impl App {
             .spawn().unwrap();
 
         App{
-            name: name.to_string(),
             port: port,
             process: child_process,
         }
