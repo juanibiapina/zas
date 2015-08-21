@@ -16,6 +16,16 @@ teardown() {
   wait "$pid" 2>/dev/null || true
 }
 
+@test "http proxy: starts without any child processes" {
+  children="$(pgrep -P ${pid} || true)"
+
+  echo "-----------------"
+  echo "$children"
+  echo "-----------------"
+
+  [ "$children" = "" ]
+}
+
 @test "http proxy: proxies a GET to 'simple' app" {
   response="$(curl -s -H 'Host: simple.dev' localhost:$HTTP_PORT)"
 
@@ -26,14 +36,4 @@ teardown() {
   response="$(curl -s -H 'Host: other.dev' localhost:$HTTP_PORT)"
 
   [ "$response" = "MOCK OTHER GET" ]
-}
-
-@test "http proxy: starts without any child processes" {
-  children="$(pgrep -P ${pid} || true)"
-
-  echo "-----------------"
-  echo "$children"
-  echo "-----------------"
-
-  [ "$children" = "" ]
 }
