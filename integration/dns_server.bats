@@ -1,5 +1,7 @@
 #!/usr/bin/env bats
 
+load test_helper
+
 DNS_PORT=12043
 
 setup() {
