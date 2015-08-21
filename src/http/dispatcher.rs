@@ -70,6 +70,6 @@ impl Handler for Dispatcher {
 
 fn block_until_port_open(port: u16) {
     while !Command::new("nc").arg("-z").arg("localhost").arg(format!("{}", port)).status().unwrap().success() {
-        thread::sleep_ms(1000);
+        thread::sleep_ms(300);
     }
 }
