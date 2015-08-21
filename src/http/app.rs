@@ -5,6 +5,7 @@ use std::process::Command;
 pub struct App {
     pub name: String,
     pub port: u16,
+    #[allow(dead_code)]
     process: Child,
 }
 
