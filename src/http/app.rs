@@ -4,24 +4,24 @@ use std::process::Command;
 
 pub struct App {
     pub name: String,
-    pub port: String,
+    pub port: u16,
     process: Child,
 }
 
 impl App {
-    pub fn new(name: String, port: &str, app_home: &String) -> App {
+    pub fn new(name: String, port: u16, app_home: &String) -> App {
         let mut path_buf = PathBuf::from(app_home);
         path_buf.push(&name);
 
         let child_process = Command::new("foreman")
             .arg("start")
             .current_dir(path_buf.as_path())
-            .env("PORT", port)
+            .env("PORT", format!("{}", port))
             .spawn().unwrap();
 
         App{
             name: name.to_string(),
-            port: port.to_string(),
+            port: port,
             process: child_process,
         }
     }

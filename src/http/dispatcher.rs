@@ -39,15 +39,16 @@ impl Handler for Dispatcher {
         let port: String;
         {
             let mut app_manager = self.app_manager.lock().unwrap();
-            let mut apps = &mut app_manager.apps;
 
-            if !apps.contains_key(&app_name) {
-                apps.insert(app_name.to_string(), App::new(app_name.to_string(), "12050", &app_home));
+            if !app_manager.apps.contains_key(&app_name) {
+                let next_port = app_manager.next_port;
+                app_manager.apps.insert(app_name.to_string(), App::new(app_name.to_string(), next_port, &app_home));
+                app_manager.next_port = next_port + 1;
                 // check that the port is open instead of sleep
                 thread::sleep_ms(1000);
             }
 
-            let app = apps.get(&app_name).unwrap();
+            let app = app_manager.apps.get(&app_name).unwrap();
             port = app.port.to_string();
         }
 
