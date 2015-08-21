@@ -2,7 +2,6 @@ extern crate hyper;
 
 use std::io::Read;
 use std::collections::HashMap;
-use std::fmt;
 
 use self::hyper::net::Fresh;
 use self::hyper::client::Client;
@@ -33,7 +32,7 @@ impl Handler for Dispatcher {
 
         let app = self.apps.get(&app_name).unwrap();
 
-        let url = fmt::format(format_args!("http://localhost:{}", &app.port));
+        let url = format!("http://localhost:{}", &app.port);
 
         let client = Client::new();
 
