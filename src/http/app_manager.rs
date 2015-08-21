@@ -30,7 +30,7 @@ impl AppManager {
             self.apps.insert(app_name.to_string(), App::new(&app_name, next_port, &self.app_home));
             self.next_port = next_port + 1;
 
-            block_until_port_open(next_port);
+            sleep_until_port_open(next_port);
         }
 
         let app = self.apps.get(app_name).unwrap();
@@ -39,7 +39,7 @@ impl AppManager {
     }
 }
 
-fn block_until_port_open(port: u16) {
+fn sleep_until_port_open(port: u16) {
     while !Command::new("nc").arg("-z").arg("localhost").arg(format!("{}", port)).status().unwrap().success() {
         thread::sleep_ms(300);
     }
