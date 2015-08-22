@@ -10,6 +10,7 @@ use self::hyper::header::Host;
 use self::hyper::server::Handler;
 use self::hyper::server::Request;
 use self::hyper::server::Response;
+use self::hyper::uri::RequestUri::AbsolutePath;
 
 use http::app_manager::AppManager;
 
@@ -36,6 +37,13 @@ impl Dispatcher {
 
         app_manager.ensure_app_running(&app_name)
     }
+
+    fn forward_uri<'a>(&'a self, request: &'a Request) -> &str {
+        match request.uri {
+            AbsolutePath(ref value) => value,
+            _ => panic!(),
+        }
+    }
 }
 
 impl Handler for Dispatcher {
@@ -43,11 +51,13 @@ impl Handler for Dispatcher {
         let app_name = self.extract_app_name(&request);
         let port = self.ensure_app_running(app_name);
 
-        let url = format!("http://localhost:{}", port);
+        let uri = self.forward_uri(&request);
+
+        let app_url = format!("http://localhost:{}{}", port, uri);
 
         let client = Client::new();
 
-        let mut app_response = client.get(&url)
+        let mut app_response = client.get(&app_url)
             .header(Connection::close())
             .send().unwrap();
 

@@ -34,3 +34,9 @@ load support/config
 
   [ "$response" = "MOCK OTHER GET: Url: /" ]
 }
+
+@test "http proxy: proxies a GET with an URL" {
+  response="$(curl -s -H 'Host: simple.dev' localhost:$HTTP_PORT/path)"
+
+  [ "$response" = "MOCK SIMPLE GET: Url: /path" ]
+}
