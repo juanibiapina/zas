@@ -25,8 +25,9 @@ impl Dispatcher {
     }
 
     fn ensure_app_running(&self, request: &Request) -> u16 {
-        let host = request.headers.get::<Host>().unwrap().hostname.to_string();
-        let app_name = host.split(".").collect::<Vec<_>>().first().unwrap().to_string();
+        let host = &request.headers.get::<Host>().unwrap().hostname;
+        let host_parts = host.split(".").collect::<Vec<_>>();
+        let app_name = host_parts.first().unwrap();
 
         let mut app_manager = self.app_manager.lock().unwrap();
 
