@@ -24,11 +24,14 @@ impl Dispatcher {
         }
     }
 
-    fn ensure_app_running(&self, request: &Request) -> u16 {
+    fn extract_app_name<'a>(&'a self, request: &'a Request) -> &str {
         let host = &request.headers.get::<Host>().unwrap().hostname;
         let host_parts = host.split(".").collect::<Vec<_>>();
-        let app_name = host_parts.first().unwrap();
 
+        host_parts.first().unwrap()
+    }
+
+    fn ensure_app_running(&self, app_name: &str) -> u16 {
         let mut app_manager = self.app_manager.lock().unwrap();
 
         app_manager.ensure_app_running(&app_name)
@@ -37,7 +40,8 @@ impl Dispatcher {
 
 impl Handler for Dispatcher {
     fn handle(&self, request: Request, response: Response<Fresh>) {
-        let port = self.ensure_app_running(&request);
+        let app_name = self.extract_app_name(&request);
+        let port = self.ensure_app_running(app_name);
 
         let url = format!("http://localhost:{}", port);
 
