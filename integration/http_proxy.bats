@@ -16,21 +16,21 @@ load support/config
 @test "http proxy: proxies a GET to 'simple' app" {
   response="$(curl -s -H 'Host: simple.dev' localhost:$HTTP_PORT)"
 
-  [ "$response" = "MOCK SIMPLE GET" ]
+  [ "$response" = "MOCK SIMPLE GET: Url: /" ]
 }
 
 @test "http proxy: proxies a GET to 'other' app" {
   response="$(curl -s -H 'Host: other.dev' localhost:$HTTP_PORT)"
 
-  [ "$response" = "MOCK OTHER GET" ]
+  [ "$response" = "MOCK OTHER GET: Url: /" ]
 }
 
 @test "http proxy: proxies request to two different apps" {
   response="$(curl -s -H 'Host: simple.dev' localhost:$HTTP_PORT)"
 
-  [ "$response" = "MOCK SIMPLE GET" ]
+  [ "$response" = "MOCK SIMPLE GET: Url: /" ]
 
   response="$(curl -s -H 'Host: other.dev' localhost:$HTTP_PORT)"
 
-  [ "$response" = "MOCK OTHER GET" ]
+  [ "$response" = "MOCK OTHER GET: Url: /" ]
 }
