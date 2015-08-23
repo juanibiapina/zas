@@ -3,7 +3,19 @@ var http = require('http');
 var port = process.argv[2];
 
 function handleRequest(request, response){
-  response.end("MOCK SIMPLE " + request.method + ": Url: " + request.url + "\n");
+  response.write("MOCK SIMPLE " + request.method + ": Url: " + request.url + "\n");
+
+  if (request.method == "POST") {
+    request.on("data", function(chunk) {
+      response.write(chunk.toString());
+    });
+
+    request.on("end", function() {
+      response.end();
+    });
+  } else {
+    response.end();
+  }
 }
 
 var server = http.createServer(handleRequest);
