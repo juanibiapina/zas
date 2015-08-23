@@ -3,7 +3,7 @@ var http = require('http');
 var port = process.argv[2];
 
 function handleRequest(request, response){
-  response.end("MOCK SIMPLE GET: Url: " + request.url + "\n");
+  response.end("MOCK SIMPLE " + request.method + ": Url: " + request.url + "\n");
 }
 
 var server = http.createServer(handleRequest);
