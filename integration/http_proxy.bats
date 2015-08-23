@@ -40,3 +40,10 @@ load support/config
 
   [ "$response" = "MOCK SIMPLE GET: Url: /path" ]
 }
+
+@test "http proxy: proxies a POST with an URL" {
+  response="$(curl -s -H 'Host: simple.dev' -X POST localhost:$HTTP_PORT/path)"
+
+  echo "$response"
+  [ "$response" = "MOCK SIMPLE POST: Url: /path" ]
+}

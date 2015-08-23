@@ -57,7 +57,7 @@ impl Handler for Dispatcher {
 
         let client = Client::new();
 
-        let mut app_response = client.get(&app_url)
+        let mut app_response = client.request(request.method.clone(), &app_url)
             .header(Connection::close())
             .send().unwrap();
 
