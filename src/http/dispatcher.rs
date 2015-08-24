@@ -47,11 +47,11 @@ impl Dispatcher {
 }
 
 impl Handler for Dispatcher {
-    fn handle(&self, request: Request, response: Response<Fresh>) {
-        let app_name = self.extract_app_name(&request);
-        let port = self.ensure_app_running(app_name);
+    fn handle(&self, mut request: Request, response: Response<Fresh>) {
+        let app_name = self.extract_app_name(&request).to_string();
+        let port = self.ensure_app_running(&app_name);
 
-        let uri = self.forward_uri(&request);
+        let uri = self.forward_uri(&request).to_string();
 
         let app_url = format!("http://localhost:{}{}", port, uri);
 
@@ -59,6 +59,7 @@ impl Handler for Dispatcher {
 
         let mut app_response = client.request(request.method.clone(), &app_url)
             .header(Connection::close())
+            .body(&mut request)
             .send().unwrap();
 
         let mut body = String::new();

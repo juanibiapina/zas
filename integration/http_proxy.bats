@@ -44,6 +44,12 @@ load support/config
 @test "http proxy: proxies a POST with an URL" {
   response="$(curl -s -H 'Host: simple.dev' -X POST localhost:$HTTP_PORT/path)"
 
-  echo "$response"
   [ "$response" = "MOCK SIMPLE POST: Url: /path" ]
+}
+
+@test "http proxy: forwards POST data to the server" {
+  response="$(curl -s -H 'Host: simple.dev' -X POST localhost:$HTTP_PORT/path -d some_data)"
+
+  [ "$response" = "MOCK SIMPLE POST: Url: /path
+some_data" ]
 }
