@@ -1,6 +1,6 @@
 extern crate hyper;
 
-use std::io::Read;
+use std::io::copy;
 use std::sync::Mutex;
 
 use self::hyper::net::Fresh;
@@ -62,9 +62,8 @@ impl Handler for Dispatcher {
             .body(&mut request)
             .send().unwrap();
 
-        let mut body = String::new();
-        app_response.read_to_string(&mut body).unwrap();
-
-        response.send(&body.into_bytes()).unwrap();
+        let mut stream = response.start().unwrap();
+        copy(&mut app_response, &mut stream).unwrap();
+        stream.end().unwrap();
     }
 }
