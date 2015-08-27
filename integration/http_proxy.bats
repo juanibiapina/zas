@@ -55,9 +55,9 @@ some_data" ]
 }
 
 @test "http proxy: forwards headers to server with connection: close" {
-  curl -s -H 'Host: simple.dev' -H 'X-CustomHeader: lol' -X GET localhost:$HTTP_PORT/save_headers
+  response="$(curl -s -H 'Host: simple.dev' -H 'X-CustomHeader: lol' -X GET localhost:$HTTP_PORT/headers)"
 
-  [ "$(cat $HEADERS_FILE)" = "accept: */*
+  [ "$response" = "accept: */*
 connection: close
 host: simple.dev
 user-agent: curl/7.43.0
@@ -65,9 +65,9 @@ x-customheader: lol" ]
 }
 
 @test "http proxy: overwrites connection: keep-alive when forwarding to apps" {
-  curl -s -H 'Host: simple.dev' -H 'X-CustomHeader: lol' -H 'Connection: keep-alive' -X GET localhost:$HTTP_PORT/save_headers
+  response="$(curl -s -H 'Host: simple.dev' -H 'X-CustomHeader: lol' -H 'Connection: keep-alive' -X GET localhost:$HTTP_PORT/headers)"
 
-  [ "$(cat $HEADERS_FILE)" = "accept: */*
+  [ "$response" = "accept: */*
 connection: close
 host: simple.dev
 user-agent: curl/7.43.0
@@ -77,5 +77,5 @@ x-customheader: lol" ]
 @test "http proxy: returns connection header unchanged" {
   response="$(curl -i -s -H 'Host: simple.dev' -H 'connection: keep-alive' -X GET localhost:$HTTP_PORT 2>&1 | grep Connection | tr -d "\015")"
 
-  [ "${response}" = "Connection: keep-alive" ]
+  [ "$response" = "Connection: keep-alive" ]
 }

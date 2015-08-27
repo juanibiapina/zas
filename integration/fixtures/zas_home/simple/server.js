@@ -4,7 +4,7 @@ var fs = require("fs");
 var port = process.argv[2];
 
 function handleRequest(request, response){
-  if (request.url == "/save_headers") {
+  if (request.url == "/headers") {
     var headers = "";
     var keys = Object.keys(request.headers);
     keys.sort();
@@ -12,7 +12,8 @@ function handleRequest(request, response){
       var key = keys[i];
       headers += key + ": " + request.headers[key] + "\n";
     }
-    fs.writeFile("../../../../tmp/headers", headers);
+
+    response.write(headers);
     response.end();
     return;
   }
