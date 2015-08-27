@@ -53,6 +53,8 @@ some_data" ]
 @test "http proxy: forwards headers to server with connection: close" {
   response="$(curl -s -H 'Host: simple.dev' -H 'X-CustomHeader: lol' -X GET localhost:$HTTP_PORT/headers)"
 
+  echo "$response"
+
   [ "$response" = "accept: */*
 connection: close
 host: simple.dev
@@ -62,6 +64,8 @@ x-customheader: lol" ]
 
 @test "http proxy: overwrites connection: keep-alive when forwarding to apps" {
   response="$(curl -s -H 'Host: simple.dev' -H 'X-CustomHeader: lol' -H 'Connection: keep-alive' -X GET localhost:$HTTP_PORT/headers)"
+
+  echo "$response"
 
   [ "$response" = "accept: */*
 connection: close
