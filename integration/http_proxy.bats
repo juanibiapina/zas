@@ -65,3 +65,15 @@ host: simple.dev
 user-agent: curl/7.43.0
 x-customheader: lol" ]
 }
+
+@test "http proxy: overwrites connection: keep-alive" {
+  curl -s -H 'Host: simple.dev' -H 'X-CustomHeader: lol' -H 'Connection: keep-alive' -X GET localhost:$HTTP_PORT/save_headers
+
+  cat $HEADERS_FILE
+
+  [ "$(cat $HEADERS_FILE)" = "accept: */*
+connection: close
+host: simple.dev
+user-agent: curl/7.43.0
+x-customheader: lol" ]
+}
