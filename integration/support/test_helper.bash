@@ -2,6 +2,8 @@
 
 FIXTURES_DIR="${BATS_TEST_DIRNAME}/fixtures"
 
+HEADERS_FILE="tmp/headers"
+
 setup() {
   export ZAS_HOME="${FIXTURES_DIR}/zas_home"
   target/debug/zas 1>&2 &

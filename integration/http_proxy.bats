@@ -53,3 +53,15 @@ load support/config
   [ "$response" = "MOCK SIMPLE POST: Url: /path
 some_data" ]
 }
+
+@test "http proxy: forwards headers to server with connection: close" {
+  curl -s -H 'Host: simple.dev' -H 'X-CustomHeader: lol' -X GET localhost:$HTTP_PORT/save_headers
+
+  cat $HEADERS_FILE
+
+  [ "$(cat $HEADERS_FILE)" = "accept: */*
+connection: close
+host: simple.dev
+user-agent: curl/7.43.0
+x-customheader: lol" ]
+}

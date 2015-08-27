@@ -1,8 +1,22 @@
-var http = require('http');
+var http = require("http");
+var fs = require("fs");
 
 var port = process.argv[2];
 
 function handleRequest(request, response){
+  if (request.url == "/save_headers") {
+    var headers = "";
+    var keys = Object.keys(request.headers);
+    keys.sort();
+    for (var i=0; i < keys.length; i++) {
+      var key = keys[i];
+      headers += key + ": " + request.headers[key] + "\n";
+    }
+    fs.writeFile("../../../../tmp/headers", headers);
+    response.end();
+    return;
+  }
+
   response.write("MOCK SIMPLE " + request.method + ": Url: " + request.url + "\n");
 
   if (request.method == "POST") {
