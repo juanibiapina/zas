@@ -57,8 +57,6 @@ some_data" ]
 @test "http proxy: forwards headers to server with connection: close" {
   curl -s -H 'Host: simple.dev' -H 'X-CustomHeader: lol' -X GET localhost:$HTTP_PORT/save_headers
 
-  cat $HEADERS_FILE
-
   [ "$(cat $HEADERS_FILE)" = "accept: */*
 connection: close
 host: simple.dev
@@ -68,8 +66,6 @@ x-customheader: lol" ]
 
 @test "http proxy: overwrites connection: keep-alive" {
   curl -s -H 'Host: simple.dev' -H 'X-CustomHeader: lol' -H 'Connection: keep-alive' -X GET localhost:$HTTP_PORT/save_headers
-
-  cat $HEADERS_FILE
 
   [ "$(cat $HEADERS_FILE)" = "accept: */*
 connection: close
