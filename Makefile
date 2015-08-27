@@ -9,4 +9,7 @@ test_unit:
 test_integration: build test_unit
 	bats integration
 
-.PHONY: test_unit test_integration build default
+watch:
+	git ls-files | entr -c make
+
+.PHONY: test_unit test_integration build default watch
