@@ -18,6 +18,14 @@ function handleRequest(request, response){
     return;
   }
 
+  if (request.url == "/302") {
+    response.writeHead(302, {
+      "Location": "http://" + request.headers.host + "/redirect_target",
+    });
+    response.end();
+    return;
+  }
+
   response.write("MOCK SIMPLE " + request.method + ": Url: " + request.url + "\n");
 
   if (request.method == "POST") {

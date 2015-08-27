@@ -79,3 +79,11 @@ x-customheader: lol" ]
 
   [ "$response" = "Connection: keep-alive" ]
 }
+
+@test "http proxy: forwards a 302 correctly" {
+  response="$(curl -s -H 'Host: simple.dev' -H 'connection: keep-alive' -o /dev/null -w "%{http_code}" -X GET localhost:$HTTP_PORT/302)"
+
+  echo "$response"
+
+  [ "$response" = "302" ]
+}

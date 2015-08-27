@@ -5,6 +5,7 @@ use std::sync::Mutex;
 
 use self::hyper::net::Fresh;
 use self::hyper::client::Client;
+use self::hyper::client::RedirectPolicy;
 use self::hyper::header::Connection;
 use self::hyper::header::Host;
 use self::hyper::server::Handler;
@@ -60,13 +61,16 @@ impl Handler for Dispatcher {
             None => Connection::close(),
         };
 
-        let client = Client::new();
+        let mut client = Client::new();
+        client.set_redirect_policy(RedirectPolicy::FollowNone);
 
         let mut app_response = client.request(request.method.clone(), &app_url)
             .headers(request.headers.clone())
             .header(Connection::close())
             .body(&mut request)
             .send().unwrap();
+
+        *response.status_mut() = app_response.status.clone();
 
         response.headers_mut().clear();
         response.headers_mut().extend(app_response.headers.iter());
