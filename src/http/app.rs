@@ -14,11 +14,14 @@ impl App {
         let mut path_buf = PathBuf::from(app_home);
         path_buf.push(&name);
 
-        let child_process = Command::new("foreman")
+        let child_process = match Command::new("foreman")
             .arg("start")
             .current_dir(path_buf.as_path())
             .env("PORT", port.to_string())
-            .spawn().unwrap();
+            .spawn() {
+                Ok(value) => value,
+                Err(e) => panic!("{}", e),
+            };
 
         sleep_until_port_open(port);
 
