@@ -25,7 +25,7 @@ impl Server {
             let app_manager = AppManager::new();
             let dispatcher = Dispatcher::new(app_manager);
 
-            server::Server::http("127.0.0.1:12044").unwrap().handle(dispatcher).unwrap();
+            server::Server::http("127.0.0.1:12044").unwrap().handle_threads(dispatcher, 20).unwrap();
         })
     }
 }
