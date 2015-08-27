@@ -73,3 +73,9 @@ host: simple.dev
 user-agent: curl/7.43.0
 x-customheader: lol" ]
 }
+
+@test "http proxy: returns connection header unchanged" {
+  response="$(curl -i -s -H 'Host: simple.dev' -H 'connection: keep-alive' -X GET localhost:$HTTP_PORT 2>&1 | grep Connection | tr -d "\015")"
+
+  [ "${response}" = "Connection: keep-alive" ]
+}
