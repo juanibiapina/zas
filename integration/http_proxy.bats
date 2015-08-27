@@ -6,10 +6,6 @@ load support/config
 @test "http proxy: starts without any child processes" {
   children="$(pgrep -P ${pid} || true)"
 
-  echo "-----------------"
-  echo "$children"
-  echo "-----------------"
-
   [ "$children" = "" ]
 }
 
