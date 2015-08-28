@@ -87,3 +87,9 @@ x-customheader: lol" ]
 
   [ "$response" = "302" ]
 }
+
+@test "http proxy: displays a pretty page if app is not found" {
+  response="$(curl -s -H 'Host: notexistent.dev' localhost:$HTTP_PORT)"
+
+  [ "$response" = "App not configured" ]
+}

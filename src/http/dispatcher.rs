@@ -14,6 +14,7 @@ use self::hyper::server::Response;
 use self::hyper::uri::RequestUri::AbsolutePath;
 
 use http::app_manager::AppManager;
+use common::error::Error;
 
 pub struct Dispatcher {
     pub app_manager: Mutex<AppManager>,
@@ -33,7 +34,7 @@ impl Dispatcher {
         host_parts.first().unwrap()
     }
 
-    fn ensure_app_running(&self, app_name: &str) -> u16 {
+    fn ensure_app_running(&self, app_name: &str) -> Result<u16, Error> {
         let mut app_manager = self.app_manager.lock().unwrap();
 
         app_manager.ensure_app_running(&app_name)
@@ -50,7 +51,15 @@ impl Dispatcher {
 impl Handler for Dispatcher {
     fn handle(&self, mut request: Request, mut response: Response<Fresh>) {
         let app_name = self.extract_app_name(&request).to_string();
-        let port = self.ensure_app_running(&app_name);
+        let result = self.ensure_app_running(&app_name);
+
+        let port: u16;
+        if result.is_ok() {
+            port = result.unwrap();
+        } else {
+            response.send(b"App not configured").unwrap();
+            return;
+        }
 
         let uri = self.forward_uri(&request).to_string();
 
