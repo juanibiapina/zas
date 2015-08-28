@@ -9,3 +9,8 @@ load support/config
   [ "$children" = "" ]
 }
 
+@test "http proxy: displays a message if app is not configured" {
+  response="$(curl -s -H 'Host: notexistent.dev' localhost:$HTTP_PORT)"
+
+  [ "$response" = "App not configured" ]
+}
