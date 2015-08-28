@@ -6,8 +6,6 @@ use std::fs;
 use http::app::App;
 use common::error::Error;
 
-const DEFAULT_APP_HOME: &'static str = "~/.zas";
-
 pub struct AppManager {
     next_port: u16,
     app_home: String,
@@ -16,13 +14,17 @@ pub struct AppManager {
 
 impl AppManager {
     pub fn new() -> AppManager {
-        let app_home = env::var("ZAS_HOME").unwrap_or(DEFAULT_APP_HOME.to_string());
+        let app_home = env::var("ZAS_HOME").unwrap_or(AppManager::default_app_home());
 
         AppManager {
             next_port: 12050,
             app_home: app_home,
             apps: HashMap::new(),
         }
+    }
+
+    fn default_app_home() -> String {
+        env::home_dir().unwrap().to_str().unwrap().to_string()
     }
 
     fn start_app(&mut self, app_name: &str) {
