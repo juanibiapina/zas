@@ -15,4 +15,4 @@ test_integration: build test_unit
 
 .PHONY: watch
 watch:
-	git ls-files | entr -c make
+	git ls-files -c -m | entr -c make
