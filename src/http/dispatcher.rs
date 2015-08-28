@@ -53,13 +53,13 @@ impl Handler for Dispatcher {
         let app_name = self.extract_app_name(&request).to_string();
         let result = self.ensure_app_running(&app_name);
 
-        let port: u16;
-        if result.is_ok() {
-            port = result.unwrap();
-        } else {
-            response.send(b"App not configured").unwrap();
-            return;
-        }
+        let port = match result {
+            Ok(value) => value,
+            Err(_) => {
+                response.send(b"App not configured").unwrap();
+                return;
+            },
+        };
 
         let uri = self.forward_uri(&request).to_string();
 
