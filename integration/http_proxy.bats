@@ -3,12 +3,6 @@
 load support/test_helper
 load support/config
 
-@test "http proxy: starts without any child processes" {
-  children="$(pgrep -P ${pid} || true)"
-
-  [ "$children" = "" ]
-}
-
 @test "http proxy: proxies a GET to 'simple' app" {
   response="$(curl -s -H 'Host: simple.dev' localhost:$HTTP_PORT)"
 
