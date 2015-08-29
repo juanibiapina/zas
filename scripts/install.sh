@@ -10,6 +10,7 @@ ZAS_ROOT="$HOME/Library/Application Support/Zas"
 ARCHIVE_URL="https://github.com/juanibiapina/zas/releases/download/v$VERSION%2B$PLATFORM/zas-v${VERSION}.${PLATFORM}.tar.gz"
 
 ZASD_PLIST_PATH="$HOME/Library/LaunchAgents/com.zas.zasd.plist"
+FIREWALL_PLIST_PATH="/Library/LaunchDaemons/com.zas.firewall.plist"
 
 mkdir -p "$ZAS_ROOT"
 cd "$ZAS_ROOT"
@@ -26,3 +27,11 @@ launchctl enable gui/"$UID"/com.zas.zasd 2>/dev/null
 launchctl kickstart -k gui/"$UID"/com.zas.zasd 2>/dev/null
 
 sudo cp -f current/resources/dev-resolver /etc/resolver/dev
+
+# set up port forwarding
+
+sudo cp current/resources/com.zas.firewall.plist "${FIREWALL_PLIST_PATH}"
+
+sudo launchctl bootstrap system "${FIREWALL_PLIST_PATH}" 2>/dev/null
+sudo launchctl enable system/com.zas.firewall 2>/dev/null
+sudo launchctl kickstart -k system/com.zas.firewall 2>/dev/null
