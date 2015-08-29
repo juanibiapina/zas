@@ -33,7 +33,7 @@ build_release:
 	cargo build --release
 
 .PHONY: tar
-tar: clean build_release
+tar: build_release
 	rm -rf tmp/zas
 	mkdir -p tmp/zas
 	mkdir -p tmp/zas/bin
@@ -41,6 +41,9 @@ tar: clean build_release
 	cp -r resources tmp/zas
 	mv tmp/zas tmp/zas-${VERSION}+${PLATFORM}
 	cd tmp && tar -czf zas-${VERSION}+${PLATFORM}.tar.gz zas-${VERSION}+${PLATFORM}
+
+.PHONY: release
+release: clean tar
 
 # other
 
