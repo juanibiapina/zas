@@ -6,5 +6,5 @@ load support/config
 @test "config: displays zas home" {
   response="$(curl -s -H 'Host: zas.dev' localhost:$HTTP_PORT)"
 
-  [ "$response" = "ZAS_HOME: ${ZAS_HOME}" ]
+  [ "$response" = "ZAS_APP_HOME: ${ZAS_APP_HOME}" ]
 }

@@ -14,7 +14,7 @@ pub struct AppManager {
 
 impl AppManager {
     pub fn new() -> AppManager {
-        let app_home = env::var("ZAS_HOME").unwrap_or(AppManager::default_app_home());
+        let app_home = env::var("ZAS_APP_HOME").unwrap_or(AppManager::default_app_home());
 
         AppManager {
             next_port: 12050,

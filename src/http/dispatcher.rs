@@ -52,7 +52,7 @@ impl Dispatcher {
 
         let zas_home = &app_manager.app_home;
 
-        response.send(&format!("ZAS_HOME: {}", zas_home).into_bytes().to_owned()).unwrap();
+        response.send(&format!("ZAS_APP_HOME: {}", zas_home).into_bytes().to_owned()).unwrap();
     }
 
     fn handle_app_request(&self, mut request: Request, mut response: Response, port: u16) {
