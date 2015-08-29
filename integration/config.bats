@@ -3,7 +3,7 @@
 load support/test_helper
 load support/config
 
-@test "config: displays zas home" {
+@test "config: uses ZAS_APP_HOME from an environment variable" {
   response="$(curl -s -H 'Host: zas.dev' localhost:$HTTP_PORT)"
 
   [ "$response" = "ZAS_APP_HOME: ${ZAS_APP_HOME}" ]
