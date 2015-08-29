@@ -1,3 +1,8 @@
+# config
+
+VERSION="v0.2.0-alpha"
+PLATFORM="Darwin"
+
 # default
 
 .PHONY: default
@@ -27,3 +32,10 @@ watch:
 build_release:
 	cargo build --release
 
+.PHONY: tar
+tar:
+	rm -rf tmp/zas
+	mkdir -p tmp/zas
+	mkdir -p tmp/zas/bin
+	cp target/release/zas tmp/zas/bin
+	cd tmp && tar -czf zas-${VERSION}+${PLATFORM}.tar.gz zas
