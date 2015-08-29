@@ -33,7 +33,7 @@ build_release:
 	cargo build --release
 
 .PHONY: tar
-tar: build_release
+tar: clean build_release
 	rm -rf tmp/zas
 	mkdir -p tmp/zas
 	mkdir -p tmp/zas/bin
