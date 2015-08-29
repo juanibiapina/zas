@@ -8,7 +8,7 @@ use common::error::Error;
 
 pub struct AppManager {
     next_port: u16,
-    app_home: String,
+    pub app_home: String,
     apps: HashMap<String, App>,
 }
 

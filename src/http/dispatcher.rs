@@ -46,21 +46,16 @@ impl Dispatcher {
             _ => panic!(),
         }
     }
-}
 
-impl Handler for Dispatcher {
-    fn handle(&self, mut request: Request, mut response: Response<Fresh>) {
-        let app_name = self.extract_app_name(&request).to_string();
-        let result = self.ensure_app_running(&app_name);
+    fn handle_zas_request(&self, response: Response) {
+        let app_manager = self.app_manager.lock().unwrap();
 
-        let port = match result {
-            Ok(value) => value,
-            Err(_) => {
-                response.send(b"App not configured").unwrap();
-                return;
-            },
-        };
+        let zas_home = &app_manager.app_home;
 
+        response.send(&format!("ZAS_HOME: {}", zas_home).into_bytes().to_owned()).unwrap();
+    }
+
+    fn handle_app_request(&self, mut request: Request, mut response: Response, port: u16) {
         let uri = self.forward_uri(&request).to_string();
 
         let app_url = format!("http://localhost:{}{}", port, uri);
@@ -88,5 +83,27 @@ impl Handler for Dispatcher {
         let mut stream = response.start().unwrap();
         copy(&mut app_response, &mut stream).unwrap();
         stream.end().unwrap();
+    }
+}
+
+impl Handler for Dispatcher {
+    fn handle(&self, request: Request, response: Response<Fresh>) {
+        let app_name = self.extract_app_name(&request).to_string();
+
+        if app_name == "zas" {
+            self.handle_zas_request(response);
+        } else {
+            let result = self.ensure_app_running(&app_name);
+
+            let port = match result {
+                Ok(value) => value,
+                Err(_) => {
+                    response.send(b"App not configured").unwrap();
+                    return;
+                },
+            };
+
+            self.handle_app_request(request, response, port);
+        }
     }
 }
