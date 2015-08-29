@@ -24,7 +24,10 @@ impl AppManager {
     }
 
     fn default_app_home() -> String {
-        env::home_dir().unwrap().to_str().unwrap().to_string()
+        let mut path_buf = PathBuf::from(env::home_dir().unwrap().to_str().unwrap());
+        path_buf.push(".zas");
+
+        path_buf.to_str().unwrap().to_string()
     }
 
     fn start_app(&mut self, app_name: &str) {
