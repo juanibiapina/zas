@@ -24,3 +24,5 @@ m4 --define ZAS_BINARY="$ZAS_ROOT/current/bin/zas" "$ZAS_ROOT/current/resources/
 launchctl bootstrap gui/"$UID" "${ZASD_PLIST_PATH}" 2>/dev/null
 launchctl enable gui/"$UID"/com.zas.zasd 2>/dev/null
 launchctl kickstart -k gui/"$UID"/com.zas.zasd 2>/dev/null
+
+sudo cp -f current/resources/dev-resolver /etc/resolver/dev
