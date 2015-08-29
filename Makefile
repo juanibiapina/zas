@@ -5,6 +5,10 @@ default: test_integration
 build:
 	cargo build
 
+.PHONY: release
+release:
+	cargo build --release
+
 .PHONY: test_unit
 test_unit:
 	cargo test
