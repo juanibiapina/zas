@@ -21,6 +21,18 @@ you use to access the application.
 
 ## Installation
 
+**Zas can't run alongsize Pow, make sure you remove one before installing the other**
+
+To install, run:
+
 ```
 curl -L https://raw.githubusercontent.com/juanibiapina/zas/master/scripts/install.sh | sh
 ```
+
+To uninstall, run:
+
+```
+curl -L https://raw.githubusercontent.com/juanibiapina/zas/master/scripts/uninstall.sh | sh
+```
+
+Sudo is required for both operations.
