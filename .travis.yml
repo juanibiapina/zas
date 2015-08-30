@@ -5,6 +5,7 @@ addons:
 install: git clone https://github.com/sstephenson/bats.git
 before_script:
   - gem install foreman
+  - npm install -g docco
   - export PATH=$PWD/bats/bin:$PATH
 language: rust
 rust:
