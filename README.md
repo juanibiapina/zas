@@ -24,8 +24,3 @@ you use to access the application.
 ```
 curl -L https://raw.githubusercontent.com/juanibiapina/zas/master/scripts/install.sh | sh
 ```
-
-## Usage
-
-cd ~/.zas
-ln -s /path/to/app
