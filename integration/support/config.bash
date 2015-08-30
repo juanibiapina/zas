@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
-DNS_PORT=12043
+export ZAS_DNS_PORT=13043
 HTTP_PORT=12044

@@ -1,5 +1,9 @@
+use std::str::FromStr;
+use std::env;
 use std::thread;
 use std::net::UdpSocket;
+use std::net::Ipv4Addr;
+use std::net::SocketAddrV4;
 
 use dns::header::Header;
 use dns::answer::Answer;
@@ -20,7 +24,8 @@ impl Server {
 
     fn create_thread() -> thread::JoinHandle<u8> {
         thread::spawn(move || {
-            let socket = UdpSocket::bind("127.0.0.1:12043").unwrap();
+            let port = env::var("ZAS_DNS_PORT").unwrap_or("12043".to_string()).parse::<u16>().unwrap();
+            let socket = UdpSocket::bind(SocketAddrV4::new(Ipv4Addr::from_str("127.0.0.1").unwrap(), port)).unwrap();
 
             let mut buffer: [u8; 512] = [0; 512];
 
