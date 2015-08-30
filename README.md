@@ -50,3 +50,14 @@ proxy the request to.
 If the app is not running, Zas chooses a port and calls 'foreman start' on the
 app directory with the PORT environment variable set, then it waits for the
 port to open.
+
+## Contributing
+
+Clone the repository and make sure the tests run. You'll probably need:
+
+- [Rust](https://www.rust-lang.org) stable
+- [bats](https://github.com/sstephenson/bats)
+- [foreman](https://github.com/ddollar/foreman)
+- [Nodejs](https://nodejs.org)
+
+Pull requests are very welcome.
