@@ -6,7 +6,7 @@ PLATFORM="Darwin"
 # default
 
 .PHONY: default
-default: test_integration
+default: test_integration docs
 
 # development
 
@@ -43,10 +43,17 @@ tar: build_release
 	cd tmp && tar -czf zas-${VERSION}+${PLATFORM}.tar.gz zas-${VERSION}+${PLATFORM}
 
 .PHONY: release
-release: clean tar
+release: clean tar docs
+
+# documentation
+
+.PHONY: docs
+docs:
+	docco scripts/*.sh
 
 # other
 
 .PHONY: clean
 clean:
+	rm -rf docs
 	rm -rf tmp
