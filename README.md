@@ -36,3 +36,17 @@ curl -L https://raw.githubusercontent.com/juanibiapina/zas/master/scripts/uninst
 ```
 
 Sudo is required for both operations.
+
+## How does it work?
+
+Zas runs a DNS server on port 12043 that resolves `.dev` domains to
+`127.0.0.1` and ignores any other domains.
+
+It also has an HTTP server running on port 12044, and the install script sets
+up a rule that forwards requests on port 80 to 12044. When Zas receives the
+request, it extracts the Host header to determine the name of the app to
+proxy the request to.
+
+If the app is not running, Zas chooses a port and calls 'foreman start' on the
+app directory with the PORT environment variable set, then it waits for the
+port to open.
