@@ -25,6 +25,10 @@
 
     mkdir -p "$HOME/.zas/apps"
 
+# Create logs directory
+
+    mkdir -p "$HOME/.zas/logs"
+
 # Download and extract archive
 
     echo "Downloading Zas version $VERSION"

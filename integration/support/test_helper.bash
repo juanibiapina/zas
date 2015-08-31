@@ -4,6 +4,7 @@ FIXTURES_DIR="${BATS_TEST_DIRNAME}/fixtures"
 
 setup() {
   export ZAS_APP_HOME="${FIXTURES_DIR}/zas_home"
+  export ZAS_LOG_HOME="${FIXTURES_DIR}/logs"
   target/debug/zas 1>&2 &
   pid="$!"
 }

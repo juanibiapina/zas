@@ -9,16 +9,19 @@ use common::error::Error;
 pub struct AppManager {
     next_port: u16,
     pub app_home: String,
+    pub log_home: String,
     apps: HashMap<String, App>,
 }
 
 impl AppManager {
     pub fn new(port: u16) -> AppManager {
         let app_home = env::var("ZAS_APP_HOME").unwrap_or(AppManager::default_app_home());
+        let log_home = env::var("ZAS_LOG_HOME").unwrap_or(AppManager::default_log_home());
 
         AppManager {
             next_port: port,
             app_home: app_home,
+            log_home: log_home,
             apps: HashMap::new(),
         }
     }
@@ -30,9 +33,16 @@ impl AppManager {
         path_buf.to_str().unwrap().to_string()
     }
 
+    fn default_log_home() -> String {
+        let mut path_buf = PathBuf::from(env::home_dir().unwrap().to_str().unwrap());
+        path_buf.push(".zas/logs");
+
+        path_buf.to_str().unwrap().to_string()
+    }
+
     fn start_app(&mut self, app_name: &str) {
         let next_port = self.next_port;
-        let app = App::new(&app_name, next_port, &self.app_home);
+        let app = App::new(&app_name, next_port, &self.app_home, &self.log_home);
         self.apps.insert(app_name.to_string(), app);
         self.next_port = next_port + 1;
     }
