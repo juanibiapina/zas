@@ -190,7 +190,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">echo</span> <span class="hljs-string">"Installing daemon"</span>
-    m4 --define ZAS_BINARY=<span class="hljs-string">"<span class="hljs-variable">$ZAS_ROOT</span>/current/bin/zas"</span> <span class="hljs-string">"<span class="hljs-variable">$ZAS_ROOT</span>/current/resources/com.zas.zasd.plist.template"</span> &gt; <span class="hljs-string">"<span class="hljs-variable">${ZASD_PLIST_PATH}</span>"</span>
+    m4 --define USER_SHELL=<span class="hljs-string">"<span class="hljs-variable">${SHELL##*/}</span>"</span> --define ZAS_BINARY=<span class="hljs-string">"<span class="hljs-variable">$ZAS_ROOT</span>/current/bin/zas"</span> <span class="hljs-string">"<span class="hljs-variable">$ZAS_ROOT</span>/current/resources/com.zas.zasd.plist.template"</span> &gt; <span class="hljs-string">"<span class="hljs-variable">${ZASD_PLIST_PATH}</span>"</span>
 
     launchctl bootstrap gui/<span class="hljs-string">"<span class="hljs-variable">$UID</span>"</span> <span class="hljs-string">"<span class="hljs-variable">${ZASD_PLIST_PATH}</span>"</span> <span class="hljs-number">2</span>&gt;/dev/null
     launchctl <span class="hljs-built_in">enable</span> gui/<span class="hljs-string">"<span class="hljs-variable">$UID</span>"</span>/com.zas.zasd <span class="hljs-number">2</span>&gt;/dev/null

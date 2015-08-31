@@ -6,7 +6,10 @@
         <string>com.zas.zasd</string>
         <key>ProgramArguments</key>
         <array>
-                <string>ZAS_BINARY</string>
+          <string>USER_SHELL</string>
+          <string>-i</string>
+          <string>-c</string>
+          <string>"ZAS_BINARY"</string>
         </array>
         <key>KeepAlive</key>
         <true/>
