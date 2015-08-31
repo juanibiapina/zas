@@ -6,7 +6,7 @@
 
 # Set up environment
 
-    VERSION="0.4.0-alpha"
+    VERSION="0.5.0-alpha"
     PLATFORM="Darwin"
 
     ZAS_ROOT="$HOME/Library/Application Support/Zas"
