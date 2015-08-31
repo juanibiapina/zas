@@ -12,7 +12,7 @@ To configure an application with zas, make sure it has a `Procfile` that runs a
 server on a `$PORT` variable and create a symlink to it:
 
 ```
-cd ~/.zas
+cd ~/.zas/apps
 ln -s ~/projects/awesome awesome
 ```
 

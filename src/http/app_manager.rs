@@ -25,7 +25,7 @@ impl AppManager {
 
     fn default_app_home() -> String {
         let mut path_buf = PathBuf::from(env::home_dir().unwrap().to_str().unwrap());
-        path_buf.push(".zas");
+        path_buf.push(".zas/apps");
 
         path_buf.to_str().unwrap().to_string()
     }

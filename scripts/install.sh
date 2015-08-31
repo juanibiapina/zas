@@ -21,6 +21,10 @@
     mkdir -p "$ZAS_ROOT"
     cd "$ZAS_ROOT"
 
+# Create apps directory
+
+    mkdir -p "$HOME/.zas/apps"
+
 # Download and extract archive
 
     echo "Downloading Zas version $VERSION"
