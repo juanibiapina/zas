@@ -1,10 +1,10 @@
 use std::str::FromStr;
-use std::env;
 use std::thread;
 use std::net::UdpSocket;
 use std::net::Ipv4Addr;
 use std::net::SocketAddrV4;
 
+use config::Config;
 use dns::header::Header;
 use dns::answer::Answer;
 use dns::message::Message;
@@ -14,17 +14,16 @@ pub struct Server {
 }
 
 impl Server {
-    pub fn create() -> Server {
-        let thread = Server::create_thread();
+    pub fn create(config: &Config) -> Server {
+        let thread = Server::create_thread(config.dns_port);
 
         Server{
             thread: thread,
         }
     }
 
-    fn create_thread() -> thread::JoinHandle<u8> {
+    fn create_thread(port: u16) -> thread::JoinHandle<u8> {
         thread::spawn(move || {
-            let port = env::var("ZAS_DNS_PORT").unwrap_or("12043".to_string()).parse::<u16>().unwrap();
             let socket = UdpSocket::bind(SocketAddrV4::new(Ipv4Addr::from_str("127.0.0.1").unwrap(), port)).unwrap();
 
             let mut buffer: [u8; 512] = [0; 512];
