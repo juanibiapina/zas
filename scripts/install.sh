@@ -11,7 +11,7 @@
 
     ZAS_ROOT="$HOME/Library/Application Support/Zas"
 
-    ARCHIVE_URL="https://github.com/juanibiapina/zas/releases/download/v$VERSION%2B$PLATFORM/zas-v${VERSION}.${PLATFORM}.tar.gz"
+    ARCHIVE_URL="https://github.com/juanibiapina/zas/releases/download/v$VERSION/zas-v${VERSION}.${PLATFORM}.tar.gz"
 
     ZASD_PLIST_PATH="$HOME/Library/LaunchAgents/com.zas.zasd.plist"
     FIREWALL_PLIST_PATH="/Library/LaunchDaemons/com.zas.firewall.plist"
