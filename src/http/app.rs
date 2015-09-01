@@ -14,13 +14,13 @@ pub struct App {
 }
 
 impl App {
-    pub fn new(name: &str, port: u16, app_home: &str, log_home: &str) -> App {
-        let mut path_buf = PathBuf::from(app_home);
+    pub fn new(name: &str, port: u16, app_dir: &str, log_dir: &str) -> App {
+        let mut path_buf = PathBuf::from(app_dir);
         path_buf.push(&name);
 
         let current_dir = path_buf.as_path();
 
-        let mut path_buf = PathBuf::from(log_home);
+        let mut path_buf = PathBuf::from(log_dir);
         path_buf.push(&name);
 
         let log_file_path = path_buf.as_path();

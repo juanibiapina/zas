@@ -50,9 +50,9 @@ impl Dispatcher {
     fn handle_zas_request(&self, response: Response) {
         let app_manager = self.app_manager.lock().unwrap();
 
-        let zas_home = &app_manager.app_home;
+        let app_dir = &app_manager.app_dir;
 
-        response.send(&format!("ZAS_APP_HOME: {}", zas_home).into_bytes().to_owned()).unwrap();
+        response.send(&format!("ZAS_APP_DIR: {}", app_dir).into_bytes().to_owned()).unwrap();
     }
 
     fn handle_app_request(&self, mut request: Request, mut response: Response, port: u16) {

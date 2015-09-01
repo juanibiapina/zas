@@ -17,7 +17,7 @@ pub struct Server {
 
 impl Server {
     pub fn create(config: &Config) -> Server {
-        let app_manager = AppManager::new(config.http_port + 6, &config.app_home, &config.log_home);
+        let app_manager = AppManager::new(config.http_port + 6, &config.app_dir, &config.log_dir);
         let dispatcher = Dispatcher::new(app_manager);
 
         let thread = Server::create_thread(dispatcher, config.http_port);
