@@ -14,3 +14,12 @@ load support/config
 
   [ "$response" = "App not configured" ]
 }
+
+@test "process manager: terminating apps" {
+  curl -s -H 'Host: simple.dev' localhost:$ZAS_HTTP_PORT
+
+  response="$(curl -s -H 'Host: zas.dev' localhost:$ZAS_HTTP_PORT/apps/simple/term)"
+
+  [ "$response" = "OK" ]
+  [ "$(pgrep -P "$pid")" = "" ]
+}

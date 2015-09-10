@@ -1,4 +1,5 @@
 extern crate hyper;
+extern crate regex;
 
 use std::io::copy;
 use std::sync::Mutex;
@@ -12,6 +13,7 @@ use self::hyper::server::Handler;
 use self::hyper::server::Request;
 use self::hyper::server::Response;
 use self::hyper::uri::RequestUri::AbsolutePath;
+use self::regex::Regex;
 
 use http::app_manager::AppManager;
 use common::error::Error;
@@ -47,12 +49,26 @@ impl Dispatcher {
         }
     }
 
-    fn handle_zas_request(&self, response: Response) {
-        let app_manager = self.app_manager.lock().unwrap();
+    fn handle_zas_request(&self, request: Request, response: Response) {
+        let uri = match request.uri {
+            AbsolutePath(ref value) => value,
+            _ => panic!(),
+        };
 
-        let app_dir = &app_manager.app_dir;
+        let mut app_manager = self.app_manager.lock().unwrap();
 
-        response.send(&format!("ZAS_APP_DIR: {}", app_dir).into_bytes().to_owned()).unwrap();
+        let term_app_regex = Regex::new("/apps/([:alpha:]+)/term").unwrap();
+
+        if term_app_regex.is_match(uri) {
+            let app_name = term_app_regex.captures(uri).unwrap().at(1).unwrap();
+            app_manager.term(app_name);
+
+            response.send(b"OK").unwrap();
+        } else {
+            let app_dir = &app_manager.app_dir;
+
+            response.send(&format!("ZAS_APP_DIR: {}", app_dir).into_bytes().to_owned()).unwrap();
+        }
     }
 
     fn handle_app_request(&self, mut request: Request, mut response: Response, port: u16) {
@@ -91,7 +107,7 @@ impl Handler for Dispatcher {
         let app_name = self.extract_app_name(&request).to_string();
 
         if app_name == "zas" {
-            self.handle_zas_request(response);
+            self.handle_zas_request(request, response);
         } else {
             let result = self.ensure_app_running(&app_name);
 

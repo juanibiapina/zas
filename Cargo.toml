@@ -5,3 +5,4 @@ authors = ["Juan Ibiapina <juanibiapina@gmail.com>"]
 
 [dependencies]
 hyper = "*"
+regex = "*"

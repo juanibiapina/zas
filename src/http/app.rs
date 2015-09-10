@@ -11,6 +11,8 @@ pub struct App {
     pub port: u16,
     #[allow(dead_code)]
     process: Child,
+    #[allow(dead_code)]
+    pid: u32,
 }
 
 impl App {
@@ -47,12 +49,22 @@ impl App {
                 Err(e) => panic!("{}", e),
             };
 
+        let pid = child_process.id();
+
         sleep_until_port_open(port);
 
         App{
             port: port,
             process: child_process,
+            pid: pid,
         }
+    }
+
+    pub fn term(&mut self) {
+        Command::new("pkill")
+            .arg("-P")
+            .arg(&self.pid.to_string())
+            .status().unwrap();
     }
 }
 

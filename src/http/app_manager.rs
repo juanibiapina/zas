@@ -45,4 +45,10 @@ impl AppManager {
 
         Ok(app.port)
     }
+
+    pub fn term(&mut self, app_name: &str) {
+        let mut app = self.apps.remove(app_name).unwrap();
+
+        app.term();
+    }
 }
