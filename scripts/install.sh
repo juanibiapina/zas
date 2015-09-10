@@ -16,7 +16,7 @@
     ZASD_PLIST_PATH="$HOME/Library/LaunchAgents/com.zas.zasd.plist"
     FIREWALL_PLIST_PATH="/Library/LaunchDaemons/com.zas.firewall.plist"
 
-# Create root directory
+# Create root directory and change to it
 
     mkdir -p "$ZAS_ROOT"
     cd "$ZAS_ROOT"
