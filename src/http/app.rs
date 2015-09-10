@@ -61,8 +61,7 @@ impl App {
     }
 
     pub fn term(&mut self) {
-        Command::new("pkill")
-            .arg("-P")
+        Command::new("kill")
             .arg(&self.pid.to_string())
             .status().unwrap();
     }
