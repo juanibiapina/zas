@@ -9,5 +9,5 @@ before_script:
   - export PATH=$PWD/bats/bin:$PATH
 language: rust
 rust:
-  - stable
+  - nightly
 script: make
