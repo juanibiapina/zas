@@ -37,6 +37,26 @@ curl -L https://raw.githubusercontent.com/juanibiapina/zas/master/scripts/uninst
 
 Sudo is required for both operations.
 
+## Usage
+
+To configure an application with Zas, create a symlink `~/.zas/apps/app_name`
+pointing to your application directory.
+
+Make sure the directory has a Procfile that runs a server in a `$PORT`
+variable. Also make sure you can run foreman successfully in this directory.
+
+Now you can use `app_name.dev` in your browser to access the application. The
+application will start automatically on first access and keep running forever.
+The log output is available at `~/.zas/logs/app_name`.
+
+To terminate an application, run:
+
+```
+curl -H 'Host: zas.dev' localhost/apps/app_name/term
+```
+
+Replacing `app_name` with the name of the symlink.
+
 ## How does it work?
 
 Zas runs a DNS server on port 12043 that resolves `.dev` domains to
