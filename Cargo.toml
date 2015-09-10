@@ -1,6 +1,6 @@
 [package]
 name = "zas"
-version = "0.6.0-alpha"
+version = "0.7.0"
 authors = ["Juan Ibiapina <juanibiapina@gmail.com>"]
 
 [dependencies]
