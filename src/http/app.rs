@@ -64,6 +64,9 @@ impl App {
         Command::new("kill")
             .arg(&self.pid.to_string())
             .status().unwrap();
+        Command::new("wait")
+            .arg(&self.pid.to_string())
+            .status().unwrap();
     }
 }
 
