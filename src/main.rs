@@ -1,5 +1,6 @@
 extern crate zas;
 
+#[cfg(not(test))]
 use zas::config::Config;
 
 #[cfg(not(test))]
