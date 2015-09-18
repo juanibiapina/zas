@@ -1,8 +1,9 @@
 # Changelog
 
-### master
+### 0.8.0
 
-- Fix terminating apps
+- Run the proper command to terminate apps
+- Wait for terminanting app to finish
 
 ### 0.7.0
 
