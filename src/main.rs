@@ -28,5 +28,8 @@ fn print_error(error: Error) {
         Error::InvalidUserHome => {
             println!("Can't read user $HOME");
         },
+        Error::InvalidPort(port) => {
+            println!("Invalid port: {}", port);
+        }
     }
 }

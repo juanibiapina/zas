@@ -12,8 +12,8 @@ pub struct Config {
 
 impl Config {
     pub fn new() -> Result<Config, Error> {
-        let dns_port = env::var("ZAS_DNS_PORT").unwrap_or("12043".to_string()).parse::<u16>().unwrap();
-        let http_port = env::var("ZAS_HTTP_PORT").unwrap_or("12044".to_string()).parse::<u16>().unwrap();
+        let dns_port = try!(read_dns_port());
+        let http_port = try!(read_http_port());
         let app_dir = env::var("ZAS_APP_DIR").unwrap_or(try!(default_app_dir()));
         let log_dir = env::var("ZAS_LOG_DIR").unwrap_or(try!(default_log_dir()));
 
@@ -23,6 +23,27 @@ impl Config {
             app_dir: app_dir,
             log_dir: log_dir,
         })
+    }
+}
+
+fn read_dns_port() -> Result<u16, Error> {
+    match env::var("ZAS_DNS_PORT") {
+        Ok(value) => parse_port(value),
+        Err(_) => parse_port("12043".to_string()),
+    }
+}
+
+fn read_http_port() -> Result<u16, Error> {
+    match env::var("ZAS_HTTP_PORT") {
+        Ok(value) => parse_port(value),
+        Err(_) => parse_port("12044".to_string()),
+    }
+}
+
+fn parse_port(port: String) -> Result<u16, Error> {
+    match port.parse::<u16>() {
+        Ok(value) => Ok(value),
+        Err(_) => Err(Error::InvalidPort(port)),
     }
 }
 

@@ -3,6 +3,7 @@
 ### master
 
 - Handle error when unable read user home directory
+- Handle error when parsing port environment variables
 
 ### 0.8.0
 
