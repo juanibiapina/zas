@@ -1,5 +1,9 @@
 # Changelog
 
+### master
+
+- Handle error when unable read user home directory
+
 ### 0.8.0
 
 - Run the proper command to terminate apps

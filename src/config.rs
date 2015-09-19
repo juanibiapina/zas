@@ -1,6 +1,8 @@
 use std::env;
 use std::path::PathBuf;
 
+use error::Error;
+
 pub struct Config {
     pub dns_port: u16,
     pub http_port: u16,
@@ -9,32 +11,45 @@ pub struct Config {
 }
 
 impl Config {
-    pub fn new() -> Config {
+    pub fn new() -> Result<Config, Error> {
         let dns_port = env::var("ZAS_DNS_PORT").unwrap_or("12043".to_string()).parse::<u16>().unwrap();
         let http_port = env::var("ZAS_HTTP_PORT").unwrap_or("12044".to_string()).parse::<u16>().unwrap();
-        let app_dir = env::var("ZAS_APP_DIR").unwrap_or(Config::default_app_dir());
-        let log_dir = env::var("ZAS_LOG_DIR").unwrap_or(Config::default_log_dir());
+        let app_dir = env::var("ZAS_APP_DIR").unwrap_or(try!(default_app_dir()));
+        let log_dir = env::var("ZAS_LOG_DIR").unwrap_or(try!(default_log_dir()));
 
-        Config {
+        Ok(Config {
             dns_port: dns_port,
             http_port: http_port,
             app_dir: app_dir,
             log_dir: log_dir,
-        }
+        })
     }
+}
 
-    fn default_app_dir() -> String {
-        let mut path_buf = PathBuf::from(env::home_dir().unwrap().to_str().unwrap());
-        path_buf.push(".zas/apps");
+fn default_app_dir() -> Result<String, Error> {
+    let mut path_buf = try!(home_dir_path());
+    path_buf.push(".zas/apps");
 
-        path_buf.to_str().unwrap().to_string()
-    }
+    Ok(path_buf.to_str().unwrap().to_string())
+}
 
-    fn default_log_dir() -> String {
-        let mut path_buf = PathBuf::from(env::home_dir().unwrap().to_str().unwrap());
-        path_buf.push(".zas/logs");
+fn default_log_dir() -> Result<String, Error> {
+    let mut path_buf = try!(home_dir_path());
+    path_buf.push(".zas/logs");
 
-        path_buf.to_str().unwrap().to_string()
-    }
+    Ok(path_buf.to_str().unwrap().to_string())
+}
 
+fn home_dir_path() -> Result<PathBuf, Error> {
+    let home_dir = match env::home_dir() {
+        Some(value) => value,
+        None => return Err(Error::InvalidUserHome),
+    };
+
+    let home_dir = match home_dir.to_str() {
+        Some(value) => value,
+        None => return Err(Error::InvalidUserHome),
+    };
+
+    Ok(PathBuf::from(home_dir))
 }
