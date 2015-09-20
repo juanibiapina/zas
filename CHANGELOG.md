@@ -2,6 +2,7 @@
 
 ### master
 
+- Properly terminate child process
 - Handle error when unable read user home directory
 - Handle error when parsing port environment variables
 
