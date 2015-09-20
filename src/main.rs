@@ -1,6 +1,9 @@
 extern crate zas;
 
 #[cfg(not(test))]
+use std::process::exit;
+
+#[cfg(not(test))]
 use zas::config::Config;
 #[cfg(not(test))]
 use zas::error::Error;
@@ -27,9 +30,11 @@ fn print_error(error: Error) {
     match error {
         Error::InvalidUserHome => {
             println!("Can't read user $HOME");
+            exit(1);
         },
         Error::InvalidPort(port) => {
             println!("Invalid port: {}", port);
+            exit(1);
         }
     }
 }
