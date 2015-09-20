@@ -1,6 +1,6 @@
 # Changelog
 
-### master
+### 0.9.0
 
 - Properly terminate child process
 - Handle error when unable read user home directory
