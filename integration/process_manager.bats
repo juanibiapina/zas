@@ -1,6 +1,7 @@
 #!/usr/bin/env bats
 
 load support/test_helper
+load support/run_zas
 load support/config
 
 @test "process manager: starts without any child processes" {
