@@ -49,7 +49,7 @@ release: clean tar docs
 
 .PHONY: docs
 docs:
-	docco -l classic scripts/*.sh
+	docco -l classic scripts/install.sh scripts/uninstall.sh
 
 # other
 
