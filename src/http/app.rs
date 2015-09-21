@@ -41,6 +41,7 @@ impl App {
 
         let child_process = match Command::new("foreman")
             .arg("start")
+            .arg("-c")
             .current_dir(current_dir)
             .env("PORT", port.to_string())
             .stdout(stdio)
