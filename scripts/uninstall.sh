@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# If for some reason only part of the script gets downloaded, this will prevent any of it from being executed
+
+    {
+
 # Stop script if any command returns non zero exit code
 
     set -e
@@ -43,3 +47,5 @@
 # Make sure the user knows it was completed successfully
 
     echo "Done"
+
+    }
