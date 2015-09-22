@@ -1,5 +1,11 @@
 # Changelog
 
+### master
+
+- Enable colors in logs
+- Wrap install and uninstall scripts in curly braces to prevent partial
+  execution
+
 ### 0.9.0
 
 - Properly terminate child process
