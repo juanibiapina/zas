@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+#
+# Summary: Restart Zas daemon
+#
+# Usage: zas restart
+
+set -e
+
+launchctl kickstart -k gui/"$UID"/com.zas.zasd 2>/dev/null
