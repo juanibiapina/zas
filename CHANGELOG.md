@@ -1,6 +1,6 @@
 # Changelog
 
-### master
+### 0.11.0
 
 - Add zas cli (not available when installing using curl)
 - Add command to restart zas
