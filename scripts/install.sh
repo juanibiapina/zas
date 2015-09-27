@@ -43,7 +43,7 @@
 
 # Install zas daemon
     echo "Installing daemon"
-    m4 --define USER_SHELL="${SHELL##*/}" --define ZAS_BINARY="$ZAS_ROOT/current/bin/zas" "$ZAS_ROOT/current/resources/com.zas.zasd.plist.template" > "${ZASD_PLIST_PATH}"
+    m4 --define USER_SHELL="${SHELL##*/}" --define ZAS_BINARY="$ZAS_ROOT/current/bin/zasd" "$ZAS_ROOT/current/resources/com.zas.zasd.plist.template" > "${ZASD_PLIST_PATH}"
 
     launchctl bootstrap gui/"$UID" "${ZASD_PLIST_PATH}" 2>/dev/null
     launchctl enable gui/"$UID"/com.zas.zasd 2>/dev/null

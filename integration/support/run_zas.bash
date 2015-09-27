@@ -3,7 +3,7 @@
 setup() {
   export ZAS_APP_DIR="${FIXTURES_DIR}/apps"
   export ZAS_LOG_DIR="${FIXTURES_DIR}/logs"
-  target/debug/zas 1>&2 &
+  target/debug/zasd 1>&2 &
   pid="$!"
 }
 

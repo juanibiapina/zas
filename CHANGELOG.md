@@ -5,6 +5,7 @@
 - Enable colors in logs
 - Wrap install and uninstall scripts in curly braces to prevent partial
   execution
+- Rename main binary to zasd
 
 ### 0.9.0
 

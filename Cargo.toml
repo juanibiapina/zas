@@ -13,3 +13,6 @@ regex = "*"
 
 [lib]
 doc = false
+
+[[bin]]
+name = "zasd"
