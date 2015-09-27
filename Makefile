@@ -37,8 +37,11 @@ tar: build_release
 	rm -rf tmp/zas
 	mkdir -p tmp/zas
 	mkdir -p tmp/zas/bin
+	mkdir -p tmp/zas/libexec
 	cp target/release/zasd tmp/zas/bin
 	cp -r resources tmp/zas
+	cp -r libexec tmp/zas
+	( cd tmp/zas/bin && ln -s ../libexec/zas )
 	mv tmp/zas tmp/zas-${VERSION}+${PLATFORM}
 	cd tmp && tar -czf zas-${VERSION}+${PLATFORM}.tar.gz zas-${VERSION}+${PLATFORM}
 
