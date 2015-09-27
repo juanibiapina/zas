@@ -4,6 +4,7 @@
 
 - Change installation to use `brew`
 - Remove old install using `curl`
+- Add `list` command
 
 ### 0.12.0
 

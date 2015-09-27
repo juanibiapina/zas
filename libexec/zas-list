@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+set -e
+
+for file in ~/.zas/apps/*; do
+  echo "${file##*/} -> $(readlink $file)"
+done
