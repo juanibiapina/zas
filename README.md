@@ -38,17 +38,19 @@ Pull requests are very welcome.
 To install, run:
 
 ```
-curl -L https://raw.githubusercontent.com/juanibiapina/zas/master/scripts/install.sh | sh
+brew tap juanibiapina/zas
+brew install zas
+zas install
 ```
 
 To uninstall, run:
 
 ```
-curl -L https://raw.githubusercontent.com/juanibiapina/zas/master/scripts/uninstall.sh | sh
+zas uninstall
+brew uninstall zas
 ```
 
-Sudo is required for both operations in order to setup the port forwarding
-rules.
+Sudo is required for both operations in order to setup the port forwarding rules.
 
 ## Usage
 

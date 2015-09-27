@@ -1,5 +1,10 @@
 # Changelog
 
+### master
+
+- Change installation to use `brew`
+- Remove old install using `curl`
+
 ### 0.12.0
 
 - Add install and uninstall commands

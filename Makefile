@@ -6,7 +6,7 @@ PLATFORM="Darwin"
 # default
 
 .PHONY: default
-default: test_integration docs
+default: test_integration
 
 # development
 
@@ -46,13 +46,7 @@ tar: build_release
 	cd tmp && tar -czf zas-${VERSION}+${PLATFORM}.tar.gz zas-${VERSION}+${PLATFORM}
 
 .PHONY: release
-release: clean_tmp test_integration docs tar
-
-# documentation
-
-.PHONY: docs
-docs:
-	docco -l classic scripts/install.sh scripts/uninstall.sh
+release: clean_tmp test_integration tar
 
 # other
 
@@ -60,7 +54,6 @@ docs:
 clean_tmp:
 	rm -rf tmp
 
-.PHONU: clean
+.PHONY: clean
 clean: clean_tmp
 	cargo clean
-	rm -rf docs
