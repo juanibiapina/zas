@@ -2,6 +2,10 @@
 name = "zas"
 version = "0.9.0"
 authors = ["Juan Ibiapina <juanibiapina@gmail.com>"]
+description = "Local development made easy"
+license = "MIT"
+homepage = "https://github.com/juanibiapina/zas"
+readme = "README.md"
 
 [dependencies]
 hyper = "*"
