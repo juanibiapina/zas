@@ -5,6 +5,8 @@
 - Change installation to use `brew`
 - Remove old install using `curl`
 - Add `list` command
+- Add `link` command
+- Add `unlink` command
 
 ### 0.12.0
 

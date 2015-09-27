@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+set -e
+
+name="$(pwd)"
+name="${name##*/}"
+
+if [ -e "$HOME/.zas/apps/${name}" ]; then
+  echo "zas: app with name '${name}' already configured"
+  exit 1
+else
+  ln -s "$(pwd)" "$HOME/.zas/apps/${name}"
+fi
