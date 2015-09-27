@@ -43,7 +43,7 @@ tar: build_release
 	cd tmp && tar -czf zas-${VERSION}+${PLATFORM}.tar.gz zas-${VERSION}+${PLATFORM}
 
 .PHONY: release
-release: clean_tmp tar
+release: clean_tmp test_integration docs tar
 
 # documentation
 
