@@ -54,6 +54,8 @@ Sudo is required for both operations in order to setup the port forwarding rules
 
 ## Usage
 
+### Configuring Applications
+
 To configure an application with Zas, create a symlink `~/.zas/apps/app_name`
 pointing to your application directory.
 
@@ -64,6 +66,8 @@ Now you can use `app_name.dev` in your browser to access the application. The
 application will start automatically on first access and keep running forever.
 The log output is available at `~/.zas/logs/app_name`.
 
+### Terminating Applications
+
 To terminate an application, run:
 
 ```
@@ -71,6 +75,10 @@ curl -H 'Host: zas.dev' localhost/apps/app_name/term
 ```
 
 Replacing `app_name` with the name of the symlink.
+
+### CLI
+
+Zas comes with a CLI. Run `zas commands` for a list of possible commands.
 
 ## How does it work?
 
