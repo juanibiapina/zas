@@ -1,6 +1,6 @@
 # Changelog
 
-### master
+### 0.10.0
 
 - Enable colors in logs
 - Wrap install and uninstall scripts in curly braces to prevent partial
