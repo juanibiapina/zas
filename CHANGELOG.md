@@ -1,6 +1,6 @@
 # Changelog
 
-### master
+### 0.12.0
 
 - Add install and uninstall commands
 
