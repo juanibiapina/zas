@@ -35,7 +35,8 @@ To uninstall, run:
 curl -L https://raw.githubusercontent.com/juanibiapina/zas/master/scripts/uninstall.sh | sh
 ```
 
-Sudo is required for both operations.
+Sudo is required for both operations in order to setup the port forwarding
+rules.
 
 ## Usage
 
