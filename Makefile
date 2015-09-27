@@ -56,3 +56,8 @@ docs:
 .PHONY: clean_tmp
 clean_tmp:
 	rm -rf tmp
+
+.PHONU: clean
+clean: clean_tmp
+	cargo clean
+	rm -rf docs
