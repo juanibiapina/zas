@@ -1,5 +1,10 @@
 # Changelog
 
+### master
+
+- Add zas cli (not available when installing using curl)
+- Add command to restart zas
+
 ### 0.10.0
 
 - Enable colors in logs
