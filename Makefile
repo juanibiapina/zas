@@ -43,7 +43,7 @@ tar: build_release
 	cd tmp && tar -czf zas-${VERSION}+${PLATFORM}.tar.gz zas-${VERSION}+${PLATFORM}
 
 .PHONY: release
-release: clean tar docs
+release: clean tar
 
 # documentation
 
@@ -55,5 +55,4 @@ docs:
 
 .PHONY: clean
 clean:
-	rm -rf docs
 	rm -rf tmp
