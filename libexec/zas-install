@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+set -e
+
+ZASD_PLIST_PATH="$HOME/Library/LaunchAgents/com.zas.zasd.plist"
+FIREWALL_PLIST_PATH="/Library/LaunchDaemons/com.zas.firewall.plist"
+
+# Create required directories
+
+mkdir -p "$HOME/.zas/apps"
+mkdir -p "$HOME/.zas/logs"
+
+# Install zas daemon
+
+echo "Installing daemon"
+m4 --define USER_SHELL="${SHELL##*/}" --define ZAS_BINARY="$(which zasd)" "$ZAS_ROOT/resources/com.zas.zasd.plist.template" > "${ZASD_PLIST_PATH}"
+
+launchctl bootstrap gui/"$UID" "${ZASD_PLIST_PATH}" 2>/dev/null
+launchctl enable gui/"$UID"/com.zas.zasd 2>/dev/null
+launchctl kickstart -k gui/"$UID"/com.zas.zasd 2>/dev/null
+
+# Install DNS resolver
+
+echo "Installing DNS resolver"
+sudo cp -f "$ZAS_ROOT/resources/dev-resolver" /etc/resolver/dev
+
+# Install port forwarding
+
+echo "Installing port forward"
+sudo cp "$ZAS_ROOT/resources/com.zas.firewall.plist" "${FIREWALL_PLIST_PATH}"
+
+sudo launchctl bootstrap system "${FIREWALL_PLIST_PATH}" 2>/dev/null
+sudo launchctl enable system/com.zas.firewall 2>/dev/null
+sudo launchctl kickstart -k system/com.zas.firewall 2>/dev/null

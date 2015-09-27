@@ -25,6 +25,8 @@ abs_dirname() {
 bin_path="$(abs_dirname "$0")"
 export PATH="${bin_path}:${PATH}"
 
+export ZAS_ROOT="$bin_path/../"
+
 command="$1"
 case "$command" in
 "")

@@ -1,5 +1,9 @@
 # Changelog
 
+### master
+
+- Add install and uninstall commands
+
 ### 0.11.0
 
 - Add zas cli (not available when installing using curl)
