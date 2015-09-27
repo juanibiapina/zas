@@ -19,6 +19,18 @@ ln -s ~/projects/awesome awesome
 The name of the symlink (awesome) determines the hostname (awesome.dev) that
 you use to access the application.
 
+## Operating System Notes
+
+Currently only OSX is supported.
+
+To make it work on Linux, there needs to be an easy way to setup a custom dns
+rule (and port) that points to zas and probably an iptable rule to redirect
+http traffic from port 80 to the zas port.
+
+Also `zasd` needs to run as a daemon.
+
+Pull requests are very welcome.
+
 ## Installation
 
 **Zas can't run alongsize Pow, make sure you remove one before installing the other**
