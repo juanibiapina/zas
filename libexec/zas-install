@@ -22,6 +22,7 @@ launchctl kickstart -k gui/"$UID"/com.zas.zasd 2>/dev/null
 # Install DNS resolver
 
 echo "Installing DNS resolver"
+sudo mkdir -p /etc/resolver/
 sudo cp -f "$ZAS_ROOT/resources/dev-resolver" /etc/resolver/dev
 
 # Install port forwarding
