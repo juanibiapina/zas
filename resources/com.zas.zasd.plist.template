@@ -15,5 +15,9 @@
         <true/>
         <key>RunAtLoad</key>
         <true/>
+        <key>StandardOutPath</key>
+        <string>USER_HOME/.zas/stdout</string>
+        <key>StandardErrorPath</key>
+        <string>USER_HOME/.zas/stderr</string>
 </dict>
 </plist>
