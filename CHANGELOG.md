@@ -7,6 +7,7 @@
 - Add `list` command
 - Add `link` command
 - Add `unlink` command
+- Fix bug on install when /etc/resolver folder doesn't exist
 
 ### 0.12.0
 
