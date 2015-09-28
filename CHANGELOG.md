@@ -1,6 +1,6 @@
 # Changelog
 
-### master
+### 0.13.0
 
 - Change installation to use `brew`
 - Remove old install using `curl`

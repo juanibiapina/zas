@@ -1,6 +1,6 @@
 [package]
 name = "zas"
-version = "0.12.0"
+version = "0.13.0"
 authors = ["Juan Ibiapina <juanibiapina@gmail.com>"]
 description = "Local development made easy"
 license = "MIT"
