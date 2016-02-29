@@ -16,6 +16,12 @@ load support/config
   [ "$response" = "MOCK OTHER GET: Url: /" ]
 }
 
+@test "http proxy: proxies a GET to an app with dots in it" {
+  response="$(curl -s -H 'Host: simple.thing.dev' localhost:$ZAS_HTTP_PORT)"
+
+  [ "$response" = "MOCK SIMPLE THING GET: Url: /" ]
+}
+
 @test "http proxy: proxies request to two different apps" {
   response="$(curl -s -H 'Host: simple.dev' localhost:$ZAS_HTTP_PORT)"
 

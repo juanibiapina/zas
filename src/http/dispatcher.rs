@@ -29,11 +29,18 @@ impl Dispatcher {
         }
     }
 
-    fn extract_app_name<'a>(&'a self, request: &'a Request) -> &str {
+    fn extract_app_name<'a>(&'a self, request: &'a Request) -> String {
         let host = &request.headers.get::<Host>().unwrap().hostname;
         let host_parts = host.split(".").collect::<Vec<_>>();
 
-        host_parts.first().unwrap()
+        match host_parts.split_last() {
+            Some((_, parts)) => {
+                parts.join(".")
+            },
+            None => {
+                panic!("zas: invalid Host header");
+            },
+        }
     }
 
     fn ensure_app_running(&self, app_name: &str) -> Result<u16, Error> {
@@ -104,7 +111,7 @@ impl Dispatcher {
 
 impl Handler for Dispatcher {
     fn handle(&self, request: Request, response: Response<Fresh>) {
-        let app_name = self.extract_app_name(&request).to_string();
+        let app_name = self.extract_app_name(&request);
 
         if app_name == "zas" {
             self.handle_zas_request(request, response);
