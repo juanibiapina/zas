@@ -1,6 +1,6 @@
 # config
 
-VERSION="v0.13.0"
+VERSION="v0.15.0"
 PLATFORM="Darwin"
 
 # default
