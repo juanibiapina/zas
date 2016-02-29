@@ -1,5 +1,13 @@
 # Changelog
 
+### 0.15.0
+
+- Allow apps with dots in the name
+
+### 0.14.0
+
+- Use full path to user shell on launch agent
+
 ### 0.13.0
 
 - Change installation to use `brew`
