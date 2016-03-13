@@ -22,10 +22,6 @@ test_unit:
 test_integration: build_debug test_unit
 	bats integration
 
-.PHONY: watch
-watch:
-	git ls-files -c -m | entr -c make
-
 # release
 
 .PHONY: build_release
