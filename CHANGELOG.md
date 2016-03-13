@@ -1,5 +1,9 @@
 # Changelog
 
+### 0.16.0
+
+- Setup automatic releases on travis and github
+
 ### 0.15.0
 
 - Allow apps with dots in the name
