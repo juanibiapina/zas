@@ -1,13 +1,72 @@
-addons:
-  apt:
-    packages:
-      - dnsutils
-install: git clone https://github.com/sstephenson/bats.git
-before_script:
-  - gem install foreman
-  - npm install -g docco
-  - export PATH=$PWD/bats/bin:$PATH
+sudo: false
+
 language: rust
-rust:
-  - nightly
-script: make
+
+# NOTE This configuration has only be tested on the stable channel
+rust: stable
+
+os:
+  - linux
+  - osx
+
+env:
+  global:
+    # This will be part of the release tarball
+    - PROJECT_NAME=zas
+
+matrix:
+  # Clear the whole matrix
+  exclude:
+    - os: linux
+    - os: osx
+  # Add each target manually
+  include:
+    - os: linux
+      env: TARGET=x86_64-unknown-linux-gnu
+      addons:
+        apt:
+          sources:
+            - kubuntu-backports
+          packages:
+            - cmake
+            - zlib1g-dev
+    - os: osx
+      env: TARGET=x86_64-apple-darwin
+
+install:
+  - sh ci/install.sh
+
+script:
+  - sh ci/script.sh
+
+before_deploy:
+  - sh ci/before_deploy.sh
+
+deploy:
+  provider: releases
+  # TODO Regenerate this api_key for your project, this one won't work for you. Here's how:
+  # - Go to 'https://github.com/settings/tokens/new' and generate a Token with only the
+  # `public_repo` scope enabled
+  # - Call `travis encrypt $github_token` where $github_token is the token you got in the previous
+  # step and `travis` is the official Travis CI gem (see https://rubygems.org/gems/travis/)
+  # - Enter the "encrypted value" below
+  api_key:
+    secure: "Uc5FFg7k3aQVlBaypkxs1LW+EaYg4DApgaAdb+N0ic0gRrA1sJrtY50182TH5s8lEVS0Wv3SdoQMvRlKfdlPTUwSmXHZycxHUuk6VejRy4fkHoJH1hR7h3h6PkXYTMhnZaV1QD6/MrldR77rt5Eg1Y15GYxqxp/vAMnSa1wVEaRz3vUIlRi912toyp3qdCxzEz1WMfzgt+NGqUywgVl/XaoFEc6gLNGLe8YnUaJpb3uYisoWoOO4uR3RimdRCwRhxJRkwt+M+tcGWO2fIbcgTaVHQDEwUqNcYxuNWFu5tsn5RpyBtjGcoJLv55a7gQ9gtENzLFyo1hEmGbq+W9CZ9FJ6VfvD1tKD4/AhGcfrlty39xPnhbthhA9UPCPPGvSUU9f4LTQIgz//Pw4UDpMg9+EaYRwKU41So2qrKNYrYsWRLyc/rPOxJrr0cLfs/5bYM50/vti/4nd570yhrJQ93HucY4Kibf1YRHj5ZEqsoG6ayXStLdzXG8kdkDfd7L9f1m/TX1RSC+rcCpOKwLB2tcfx9vBr99nabdF4V0PwtvbKFRB1vKeVje4u45HjANiyvPlnsBQzmFNhAljSyt0b/zQeIG1z3XB137K5bbM0JbtsLU2dLwyUYSTqaG+ahTrBCE0yFYxJoDsD1MdPoNi2ffeDiNCW+5xFP2hsZ6BFGQU="
+  file: ${PROJECT_NAME}-${TRAVIS_TAG}-${TARGET}.tar.gz
+  # don't delete the artifacts from previous phases
+  skip_cleanup: true
+  # deploy when a new tag is pushed
+  on:
+    tags: true
+
+branches:
+  only:
+    # Pushes and PR to the master branch
+    - master
+    # IMPORTANT Ruby regex to match tags. Required, or travis won't trigger deploys when a new tag
+    # is pushed. This regex matches semantic versions like v1.2.3-rc4+2016.02.22
+    - /^v\d+\.\d+\.\d+.*$/
+
+notifications:
+  email:
+    on_success: never
