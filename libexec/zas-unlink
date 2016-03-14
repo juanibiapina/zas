@@ -1,4 +1,12 @@
 #!/usr/bin/env bash
+#
+# Summary: Remove an application
+#
+# Usage: zas unlink
+#
+# Removes an application.
+#
+# The name of the current directory will be used as the application name.
 
 set -e
 

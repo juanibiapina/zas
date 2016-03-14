@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
+#
+# Summary: Lists configured applications
+#
+# Usage: zas list
+#
+# Lists configured applications.
 
 set -e
 

@@ -1,4 +1,12 @@
 #!/usr/bin/env bash
+#
+# Summary: Configure an application with zas
+#
+# Usage: zas link
+#
+# Configures an application with zas.
+#
+# The name of the current directory will be used as the application name.
 
 set -e
 

@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+#
+# Summary: Tails a log for the current application
+#
+# Usage: zas tail
 
 set -e
 

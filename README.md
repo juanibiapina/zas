@@ -80,6 +80,17 @@ Replacing `app_name` with the name of the symlink.
 
 Zas comes with a CLI. Run `zas commands` for a list of possible commands.
 
+- commands: displays a list of available commands
+- help: displays help for a command
+- install: setup zas system hooks
+- link: configures the current directory as an app
+- list: lists configured apps
+- restart: restarts zas daemon
+- tail: tails the logs for the current app
+- term: terminates the current app
+- uninstall: removes zas system hooks
+- unlink: removes the current app
+
 ## How does it work?
 
 Zas runs a DNS server on port 12043 that resolves `.dev` domains to

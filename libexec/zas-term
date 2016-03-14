@@ -1,4 +1,11 @@
 #!/usr/bin/env bash
+#
+# Summary: Terminates current application
+#
+# Usage: zas term
+#
+# Terminates current application.
+# The application will start again on the next access.
 
 set -e
 
