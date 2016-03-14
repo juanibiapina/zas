@@ -1,5 +1,11 @@
 # Changelog
 
+### 0.17.0
+
+- Add zas term command
+- Add zas tail command
+- Update to rust 1.7
+
 ### 0.16.0
 
 - Setup automatic releases on travis and github
