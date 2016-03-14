@@ -6,6 +6,7 @@ use std::process::Command;
 use std::fs::OpenOptions;
 use std::os::unix::prelude::FromRawFd;
 use std::os::unix::prelude::AsRawFd;
+use std::time::Duration;
 
 pub struct App {
     pub port: u16,
@@ -72,6 +73,6 @@ impl App {
 
 fn sleep_until_port_open(port: u16) {
     while !Command::new("nc").arg("-z").arg("localhost").arg(format!("{}", port)).status().unwrap().success() {
-        thread::sleep_ms(300);
+        thread::sleep(Duration::from_millis(300));
     }
 }
