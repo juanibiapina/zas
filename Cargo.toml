@@ -9,7 +9,9 @@ readme = "README.md"
 
 [dependencies]
 hyper = "*"
+futures = "*"
 regex = "*"
+tokio-core = "*"
 
 [lib]
 doc = false

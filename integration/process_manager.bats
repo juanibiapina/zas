@@ -21,6 +21,8 @@ load support/config
 
   response="$(curl -s -H 'Host: zas.dev' localhost:$ZAS_HTTP_PORT/apps/simple/term)"
 
+  echo $response
+
   [ "$response" = "OK" ]
   [ "$(pgrep -P "$pid")" = "" ]
 }

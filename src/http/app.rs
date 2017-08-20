@@ -8,6 +8,7 @@ use std::os::unix::prelude::FromRawFd;
 use std::os::unix::prelude::AsRawFd;
 use std::time::Duration;
 
+#[derive(Debug)]
 pub struct App {
     pub port: u16,
     #[allow(dead_code)]

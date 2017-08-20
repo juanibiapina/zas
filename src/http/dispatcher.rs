@@ -1,36 +1,39 @@
 extern crate hyper;
+extern crate tokio_core;
+extern crate futures;
 extern crate regex;
 
-use std::io::copy;
-use std::sync::Mutex;
+use std::sync::{Arc, Mutex};
+use std::str::FromStr;
 
-use self::hyper::net::Fresh;
-use self::hyper::client::Client;
-use self::hyper::client::RedirectPolicy;
-use self::hyper::header::Connection;
-use self::hyper::header::Host;
-use self::hyper::server::Handler;
-use self::hyper::server::Request;
-use self::hyper::server::Response;
-use self::hyper::uri::RequestUri::AbsolutePath;
 use self::regex::Regex;
+use self::futures::Future;
+use self::hyper::Uri;
+use self::hyper::header::Host;
+use self::hyper::header::ContentLength;
+use self::hyper::header::Connection;
+use self::hyper::server::{Request, Response, Service};
+use self::tokio_core::reactor::{Handle};
+use self::hyper::client;
 
 use http::app_manager::AppManager;
 use common::error::Error;
 
 pub struct Dispatcher {
-    pub app_manager: Mutex<AppManager>,
+    app_manager: Arc<Mutex<AppManager>>,
+    handle: Handle,
 }
 
 impl Dispatcher {
-    pub fn new(app_manager: AppManager) -> Dispatcher {
+    pub fn new(app_manager: Arc<Mutex<AppManager>>, handle: Handle) -> Dispatcher {
         Dispatcher {
-            app_manager: Mutex::new(app_manager),
+            app_manager: app_manager,
+            handle: handle,
         }
     }
 
-    fn extract_app_name<'a>(&'a self, request: &'a Request) -> String {
-        let host = &request.headers.get::<Host>().unwrap().hostname;
+    fn extract_app_name(&self, request: &Request) -> String {
+        let host = &request.headers().get::<Host>().unwrap().hostname();
         let host_parts = host.split(".").collect::<Vec<_>>();
 
         match host_parts.split_last() {
@@ -49,84 +52,97 @@ impl Dispatcher {
         app_manager.ensure_app_running(&app_name)
     }
 
-    fn forward_uri<'a>(&'a self, request: &'a Request) -> &str {
-        match request.uri {
-            AbsolutePath(ref value) => value,
-            _ => panic!(),
-        }
-    }
-
-    fn handle_zas_request(&self, request: Request, response: Response) {
-        let uri = match request.uri {
-            AbsolutePath(ref value) => value,
-            _ => panic!(),
-        };
+    fn handle_zas_request(&self, request: Request) -> Box<Future<Item = Response, Error = hyper::Error>> {
+        let path = request.path();
 
         let mut app_manager = self.app_manager.lock().unwrap();
 
-        let term_app_regex = Regex::new("/apps/([:alpha:]+)/term").unwrap();
+        let mut response = Response::new();
 
-        if term_app_regex.is_match(uri) {
-            let app_name = term_app_regex.captures(uri).unwrap().at(1).unwrap();
+        let term_app_regex = Regex::new("/apps/([[:alpha:]]+)/term").unwrap();
+
+        if term_app_regex.is_match(path) {
+            let app_name = term_app_regex.captures(path).unwrap().get(1).unwrap().as_str();
             app_manager.term(app_name);
 
-            response.send(b"OK").unwrap();
+            response.set_body("OK");
         } else {
             let app_dir = &app_manager.app_dir;
 
-            response.send(&format!("ZAS_APP_DIR: {}", app_dir).into_bytes().to_owned()).unwrap();
+            let result = format!("ZAS_APP_DIR: {}", app_dir);
+
+            response.set_body(result);
         }
+
+        return futures::future::ok(response).boxed();
     }
 
-    fn handle_app_request(&self, mut request: Request, mut response: Response, port: u16) {
-        let uri = self.forward_uri(&request).to_string();
+    fn handle_app_request(&self, request: Request, app_name: String) -> Box<Future<Item = Response, Error = hyper::Error>> {
+        let result = self.ensure_app_running(&app_name);
 
-        let app_url = format!("http://localhost:{}{}", port, uri);
+        let port = match result {
+            Ok(value) => value,
+            Err(_) => {
+                return futures::future::ok(
+                    Response::new()
+                        .with_header(ContentLength("App not configured".len() as u64))
+                        .with_body("App not configured")
+                    ).boxed();
+            },
+        };
 
-        let connection_header = match request.headers.get::<Connection>() {
+        let connection_header = match request.headers().get::<Connection>() {
             Some(value) => value.clone(),
             None => Connection::close(),
         };
 
-        let mut client = Client::new();
-        client.set_redirect_policy(RedirectPolicy::FollowNone);
+        let app_url = format!("http://localhost:{}{}", port, request.path());
+        let app_uri = Uri::from_str(&app_url).unwrap();
 
-        let mut app_response = client.request(request.method.clone(), &app_url)
-            .headers(request.headers.clone())
-            .header(Connection::close())
-            .body(&mut request)
-            .send().unwrap();
+        let mut client_req = client::Request::new(request.method().clone(), app_uri);
+        client_req.headers_mut().extend(request.headers().iter());
+        client_req.headers_mut().set(Connection::close());
+        client_req.set_body(request.body());
 
-        *response.status_mut() = app_response.status.clone();
+        let client = hyper::Client::configure()
+            .keep_alive(false)
+            .build(&self.handle);
 
-        response.headers_mut().clear();
-        response.headers_mut().extend(app_response.headers.iter());
-        response.headers_mut().set(connection_header);
+        let resp = client.request(client_req)
+                         .then(move |result| {
+                             match result {
+                                 Ok(client_resp) => {
+                                     Ok(Response::new()
+                                            .with_status(client_resp.status())
+                                            .with_headers(client_resp.headers().clone())
+                                            .with_header(connection_header)
+                                            .with_body(client_resp.body()))
+                                 }
+                                 Err(e) => {
+                                     println!("{:?}", &e);
+                                     Err(e)
+                                 }
+                             }
+                         });
 
-        let mut stream = response.start().unwrap();
-        copy(&mut app_response, &mut stream).unwrap();
-        stream.end().unwrap();
+        Box::new(resp)
+
     }
 }
 
-impl Handler for Dispatcher {
-    fn handle(&self, request: Request, response: Response<Fresh>) {
+impl Service for Dispatcher {
+    type Request = Request;
+    type Response = Response;
+    type Error = hyper::Error;
+    type Future = Box<Future<Item = Self::Response, Error = Self::Error>>;
+
+    fn call(&self, request: Request) -> Self::Future {
         let app_name = self.extract_app_name(&request);
 
         if app_name == "zas" {
-            self.handle_zas_request(request, response);
+            self.handle_zas_request(request)
         } else {
-            let result = self.ensure_app_running(&app_name);
-
-            let port = match result {
-                Ok(value) => value,
-                Err(_) => {
-                    response.send(b"App not configured").unwrap();
-                    return;
-                },
-            };
-
-            self.handle_app_request(request, response, port);
+            self.handle_app_request(request, app_name)
         }
     }
 }
