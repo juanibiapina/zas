@@ -1,9 +1,5 @@
 #!/usr/bin/env bats
 
-load support/test_helper
-load support/run_zas
-load support/config
-
 @test "headers: forwards headers to server with connection: close" {
   response="$(curl -s -H 'Host: simple.dev' -H 'X-CustomHeader: lol' -A "curl" -X GET localhost:$ZAS_HTTP_PORT/headers)"
 

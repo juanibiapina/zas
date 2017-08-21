@@ -1,54 +1,55 @@
-use std::collections::HashMap;
-use std::path::PathBuf;
-use std::fs;
+extern crate toml;
+extern crate xdg;
 
-use http::app::App;
-use common::error::Error;
+use self::toml::Value;
+
+use std::str::FromStr;
+use std::io::Read;
+use std::fs::File;
+use std::path::{Path, PathBuf};
+use std::collections::HashMap;
+
+use error::Error;
 
 pub struct AppManager {
-    next_port: u16,
-    pub app_dir: String,
-    pub log_dir: String,
-    apps: HashMap<String, App>,
+    apps: HashMap<String, u16>,
 }
 
 impl AppManager {
-    pub fn new(base_port: u16, app_dir: &str, log_dir: &str) -> AppManager {
-        AppManager {
-            next_port: base_port,
-            app_dir: app_dir.to_string(),
-            log_dir: log_dir.to_string(),
-            apps: HashMap::new(),
-        }
+    pub fn new() -> Result<AppManager, Error> {
+        let config_path = get_config_path()?;
+
+        let value = Value::from_str(&read_config_file(&config_path)?).unwrap();
+        let data = value.as_table().unwrap();
+
+        let apps: HashMap<String, u16> = data.iter().map(|(k, v)| (k.to_owned(), v.as_integer().unwrap() as u16)).collect();
+
+        Ok(AppManager {
+            apps: apps,
+        })
     }
 
-    fn start_app(&mut self, app_name: &str) {
-        let next_port = self.next_port;
-        let app = App::new(&app_name, next_port, &self.app_dir, &self.log_dir);
-        self.apps.insert(app_name.to_string(), app);
-        self.next_port = next_port + 1;
-    }
-
-    pub fn ensure_app_running(&mut self, app_name: &str) -> Result<u16, Error> {
+    pub fn get_port(&self, app_name: &str) -> Option<u16> {
         if !self.apps.contains_key(app_name) {
-            let mut path_buf = PathBuf::from(&self.app_dir);
-            path_buf.push(&app_name);
-
-            if fs::metadata(path_buf.as_path()).is_err() {
-                return Err(Error::AppNotConfigured);
-            }
-
-            self.start_app(app_name);
+            return None;
         }
 
-        let app = self.apps.get(app_name).unwrap();
+        let port = *self.apps.get(app_name).unwrap();
 
-        Ok(app.port)
+        Some(port)
     }
+}
 
-    pub fn term(&mut self, app_name: &str) {
-        let mut app = self.apps.remove(app_name).unwrap();
+fn get_config_path() -> Result<PathBuf, Error> {
+    let xdg_dirs = xdg::BaseDirectories::with_prefix("zas")?;
 
-        app.term();
-    }
+    return Ok(xdg_dirs.place_config_file("apps.toml")?);
+}
+
+fn read_config_file(path: &Path) -> Result<String, Error> {
+    let mut file = File::open(path)?;
+    let mut contents = String::new();
+    file.read_to_string(&mut contents)?;
+
+    Ok(contents)
 }

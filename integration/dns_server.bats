@@ -1,9 +1,5 @@
 #!/usr/bin/env bats
 
-load support/test_helper
-load support/run_zas
-load support/config
-
 @test "dns: resolves app.dev domain to 127.0.0.1" {
   response="$(dig app.dev @127.0.0.1 -p $ZAS_DNS_PORT +short +retry=0)"
 

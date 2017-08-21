@@ -1,11 +1,9 @@
 #!/usr/bin/env bats
 
-load support/test_helper
-load support/run_zas
-load support/config
-
 @test "http proxy: proxies a GET to 'simple' app" {
   response="$(curl -s -H 'Host: simple.dev' localhost:$ZAS_HTTP_PORT)"
+
+  echo $response
 
   [ "$response" = "MOCK SIMPLE GET: Url: /" ]
 }

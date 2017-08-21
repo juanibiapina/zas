@@ -2,7 +2,7 @@ extern crate hyper;
 extern crate tokio_core;
 extern crate futures;
 
-use std::sync::{Arc, Mutex};
+use std::sync::{Arc};
 use std::thread;
 use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 
@@ -11,6 +11,7 @@ use self::tokio_core::net::TcpListener;
 use self::hyper::server::Http;
 use self::futures::stream::Stream;
 
+use error::Error;
 use config::Config;
 use http::dispatcher::Dispatcher;
 use http::app_manager::AppManager;
@@ -20,17 +21,17 @@ pub struct Server {
 }
 
 impl Server {
-    pub fn create(config: &Config) -> Server {
-        let app_manager = Arc::new(Mutex::new(AppManager::new(config.http_port + 6, &config.app_dir, &config.log_dir)));
+    pub fn create(config: &Config) -> Result<Server, Error> {
+        let app_manager = Arc::new(AppManager::new()?);
 
         let thread = Server::create_thread(app_manager, config.http_port);
 
-        Server {
+        Ok(Server {
             thread: thread,
-        }
+        })
     }
 
-    fn create_thread(app_manager: Arc<Mutex<AppManager>>, port: u16) -> thread::JoinHandle<()> {
+    fn create_thread(app_manager: Arc<AppManager>, port: u16) -> thread::JoinHandle<()> {
         thread::spawn(move || {
             let http = Http::new();
             let mut core = Core::new().unwrap();

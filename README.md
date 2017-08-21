@@ -5,29 +5,14 @@
 Zas is a tool to help with local web development, inspired by [Pow](http://pow.cx).
 
 It works by running a DNS server that resolves `.dev` domains to your local
-machine. Then, when the browser makes requests to `awesome.dev`, zas brings up
-your `awesome` application and forwards requests to it.
-
-To configure an application with zas, make sure it has a `Procfile` that runs a
-server on a `$PORT` variable and create a symlink to it:
-
-```
-cd ~/.zas/apps
-ln -s ~/projects/awesome awesome
-```
-
-The name of the symlink (awesome) determines the hostname (awesome.dev) that
-you use to access the application.
+machine. Then, when the browser makes requests to `awesome.dev`, zas proxies
+the requests to your configured applications.
 
 ## Operating System Notes
 
-Currently only OSX is supported.
-
-To make it work on Linux, there needs to be an easy way to setup a custom dns
-rule (and port) that points to zas and probably an iptable rule to redirect
-http traffic from port 80 to the zas port.
-
-Also `zasd` needs to run as a daemon.
+Install scripts are only provided for OSX. To make it work on Linux, you need
+to setup a custom dns rule (and port) that points to zas and an iptable rule to
+redirect http traffic from port 80 to the zas port.
 
 Pull requests are very welcome.
 
@@ -56,25 +41,18 @@ Sudo is required for both operations in order to setup the port forwarding rules
 
 ### Configuring Applications
 
-To configure an application with Zas, create a symlink `~/.zas/apps/app_name`
-pointing to your application directory.
+To configure an application with Zas, add a mapping on
+`~/.config/zas/apps.toml` with the name of your app and the port where it is
+running:
 
-Make sure the directory has a Procfile that runs a server in a `$PORT`
-variable. Also make sure you can run foreman successfully in this directory.
-
-Now you can use `app_name.dev` in your browser to access the application. The
-application will start automatically on first access and keep running forever.
-The log output is available at `~/.zas/logs/app_name`.
-
-### Terminating Applications
-
-To terminate an application, run:
-
-```
-curl -H 'Host: zas.dev' localhost/apps/app_name/term
+```toml
+app_name = 3000
 ```
 
-Replacing `app_name` with the name of the symlink.
+Make sure your app is running on the port you specified. Zas will not try to
+run it in any way.
+
+Now you can use `app_name.dev` in your browser to access the application.
 
 ### CLI
 
@@ -83,13 +61,7 @@ Zas comes with a CLI. Run `zas commands` for a list of possible commands.
 - commands: displays a list of available commands
 - help: displays help for a command
 - install: setup zas system hooks
-- link: configures the current directory as an app
-- list: lists configured apps
-- restart: restarts zas daemon
-- tail: tails the logs for the current app
-- term: terminates the current app
 - uninstall: removes zas system hooks
-- unlink: removes the current app
 
 ## How does it work?
 
@@ -98,12 +70,11 @@ Zas runs a DNS server on port 12043 that resolves `.dev` domains to
 
 It also has an HTTP server running on port 12044, and the install script sets
 up a rule that forwards requests on port 80 to 12044. When Zas receives the
-request, it extracts the Host header to determine the name of the app to
+request, it extracts the `Host` header to determine the name of the app to
 proxy the request to.
 
-If the app is not running, Zas chooses a port and calls 'foreman start' on the
-app directory with the PORT environment variable set, then it waits for the
-port to open.
+If there is a port mapping for that app on the config file, zas proxies the
+request to that port.
 
 ## Contributing
 
@@ -111,7 +82,4 @@ Clone the repository and make sure the tests run. You'll probably need:
 
 - [Rust](https://www.rust-lang.org) stable
 - [bats](https://github.com/sstephenson/bats)
-- [foreman](https://github.com/ddollar/foreman)
 - [Nodejs](https://nodejs.org)
-
-Pull requests are very welcome.

@@ -6,14 +6,7 @@
 
 set -e
 
-ZASD_PLIST_PATH="$HOME/Library/LaunchAgents/com.zas.zasd.plist"
 FIREWALL_PLIST_PATH="/Library/LaunchDaemons/com.zas.firewall.plist"
-
-# Stop and remove the Zas daemon
-
-echo "Stopping the Zas Daemon"
-launchctl unload "$ZASD_PLIST_PATH" 2>/dev/null || true
-rm -f "$ZASD_PLIST_PATH"
 
 # Uninstall the DNS resolver
 

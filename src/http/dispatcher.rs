@@ -1,12 +1,10 @@
 extern crate hyper;
 extern crate tokio_core;
 extern crate futures;
-extern crate regex;
 
-use std::sync::{Arc, Mutex};
+use std::sync::Arc;
 use std::str::FromStr;
 
-use self::regex::Regex;
 use self::futures::Future;
 use self::hyper::Uri;
 use self::hyper::header::Host;
@@ -17,15 +15,14 @@ use self::tokio_core::reactor::{Handle};
 use self::hyper::client;
 
 use http::app_manager::AppManager;
-use common::error::Error;
 
 pub struct Dispatcher {
-    app_manager: Arc<Mutex<AppManager>>,
+    app_manager: Arc<AppManager>,
     handle: Handle,
 }
 
 impl Dispatcher {
-    pub fn new(app_manager: Arc<Mutex<AppManager>>, handle: Handle) -> Dispatcher {
+    pub fn new(app_manager: Arc<AppManager>, handle: Handle) -> Dispatcher {
         Dispatcher {
             app_manager: app_manager,
             handle: handle,
@@ -46,43 +43,20 @@ impl Dispatcher {
         }
     }
 
-    fn ensure_app_running(&self, app_name: &str) -> Result<u16, Error> {
-        let mut app_manager = self.app_manager.lock().unwrap();
-
-        app_manager.ensure_app_running(&app_name)
-    }
-
-    fn handle_zas_request(&self, request: Request) -> Box<Future<Item = Response, Error = hyper::Error>> {
-        let path = request.path();
-
-        let mut app_manager = self.app_manager.lock().unwrap();
-
+    fn handle_zas_request(&self, _: Request) -> Box<Future<Item = Response, Error = hyper::Error>> {
         let mut response = Response::new();
 
-        let term_app_regex = Regex::new("/apps/([[:alpha:]]+)/term").unwrap();
-
-        if term_app_regex.is_match(path) {
-            let app_name = term_app_regex.captures(path).unwrap().get(1).unwrap().as_str();
-            app_manager.term(app_name);
-
-            response.set_body("OK");
-        } else {
-            let app_dir = &app_manager.app_dir;
-
-            let result = format!("ZAS_APP_DIR: {}", app_dir);
-
-            response.set_body(result);
-        }
+        response.set_body("OK");
 
         return futures::future::ok(response).boxed();
     }
 
     fn handle_app_request(&self, request: Request, app_name: String) -> Box<Future<Item = Response, Error = hyper::Error>> {
-        let result = self.ensure_app_running(&app_name);
+        let result = self.app_manager.get_port(&app_name);
 
         let port = match result {
-            Ok(value) => value,
-            Err(_) => {
+            Some(value) => value,
+            None => {
                 return futures::future::ok(
                     Response::new()
                         .with_header(ContentLength("App not configured".len() as u64))

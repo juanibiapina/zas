@@ -11,7 +11,7 @@ test_unit:
 
 .PHONY: test_integration
 test_integration: build_debug test_unit
-	bats integration
+	./run_tests.sh
 
 .PHONY: clean
 clean:

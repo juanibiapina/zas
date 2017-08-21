@@ -10,8 +10,9 @@ readme = "README.md"
 [dependencies]
 hyper = "*"
 futures = "*"
-regex = "*"
 tokio-core = "*"
+toml = "*"
+xdg = "*"
 
 [lib]
 doc = false
