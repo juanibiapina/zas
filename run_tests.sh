@@ -25,10 +25,9 @@ wait_for_port_open 13052
 node "integration/fixtures/apps/simple.thing/server.js" 13053 &
 wait_for_port_open 13053
 
-export FIXTURES_DIR="$(pwd)/integration/fixtures"
 export ZAS_DNS_PORT=13043
 export ZAS_HTTP_PORT=13044
-export XDG_CONFIG_HOME="${FIXTURES_DIR}/config"
+export XDG_CONFIG_HOME="$(pwd)/integration/fixtures/config"
 
 target/debug/zasd 1>&2 &
 
