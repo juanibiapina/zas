@@ -1,5 +1,11 @@
 # Changelog
 
+### Current
+
+- Update http proxy to use async hyper
+- Update to rust 1.19
+- Remove process management
+
 ### 0.17.0
 
 - Add zas term command
