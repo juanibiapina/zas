@@ -1,8 +1,8 @@
 [package]
 name = "zas"
-version = "0.18.0"
+version = "0.19.0"
 authors = ["Juan Ibiapina <juanibiapina@gmail.com>"]
-description = "Local development made easy"
+description = "Simple router for local web development"
 license = "MIT"
 homepage = "https://github.com/juanibiapina/zas"
 readme = "README.md"

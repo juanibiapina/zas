@@ -1,5 +1,9 @@
 # Changelog
 
+### 0.19.0
+
+- Restore uninstall script
+
 ### 0.18.0
 
 - Rename main binary to zas
