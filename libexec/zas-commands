@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-#
-# Summary: List all available zas commands
-#
-# Usage: zas commands
-
-set -e
-
-zas _commands zas

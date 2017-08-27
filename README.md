@@ -18,9 +18,6 @@ Pull requests are very welcome.
 
 ## Installation
 
-**WARNING**: Current install instructions are broken. Zas needs to be compiled
-from source.
-
 **Zas can't run alongsize Pow, make sure you remove one before installing the other**
 
 To install, run:
@@ -38,9 +35,12 @@ zas uninstall
 brew uninstall zas
 ```
 
-Sudo is required for both operations in order to setup the port forwarding rules.
+Sudo is required in order to setup the dns and port forwarding rules.
 
 ## Usage
+
+First make sure `zas` is running in a terminal window. It needs to be restarted
+when the any changes are made to the config file.
 
 ### Configuring Applications
 
@@ -56,15 +56,6 @@ Make sure your app is running on the port you specified. Zas will not try to
 run it in any way.
 
 Now you can use `app_name.dev` in your browser to access the application.
-
-### CLI
-
-Zas comes with a CLI. Run `zas commands` for a list of possible commands.
-
-- commands: displays a list of available commands
-- help: displays help for a command
-- install: setup zas system hooks
-- uninstall: removes zas system hooks
 
 ## How does it work?
 

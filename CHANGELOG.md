@@ -5,6 +5,8 @@
 - Update http proxy to use async hyper
 - Update to rust 1.19
 - Remove process management
+- Remove system daemon
+- Remove bash CLI
 
 ### 0.17.0
 
