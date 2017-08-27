@@ -17,10 +17,19 @@ fn main() {
         .about("Simple router for local web development")
         .subcommand(SubCommand::with_name("install")
                     .about("install zas system wide hooks"))
+        .subcommand(SubCommand::with_name("uninstall")
+                    .about("uninstall zas system wide hooks"))
         .get_matches();
 
     if let Some(_) = matches.subcommand_matches("install") {
         match zas::install::run_install() {
+            Ok(()) => {},
+            Err(e) => {
+                print_error(e);
+            }
+        }
+    } else if let Some(_) = matches.subcommand_matches("uninstall") {
+        match zas::uninstall::run_uninstall() {
             Ok(()) => {},
             Err(e) => {
                 print_error(e);
