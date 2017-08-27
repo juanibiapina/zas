@@ -5,12 +5,8 @@ default: test_integration
 build_debug:
 	cargo build
 
-.PHONY: test_unit
-test_unit:
-	cargo test
-
 .PHONY: test_integration
-test_integration: build_debug test_unit
+test_integration: build_debug
 	./run_tests.sh
 
 .PHONY: clean

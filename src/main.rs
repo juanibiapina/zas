@@ -1,16 +1,11 @@
 extern crate zas;
 
-#[cfg(not(test))]
 use std::process::exit;
-#[cfg(not(test))]
 use std::error::Error as StdError;
 
-#[cfg(not(test))]
 use zas::config::Config;
-#[cfg(not(test))]
 use zas::error::Error;
 
-#[cfg(not(test))]
 fn main() {
     let config = match Config::new() {
         Ok(config) => config,
@@ -31,7 +26,6 @@ fn main() {
     http_server.thread.join().unwrap();
 }
 
-#[cfg(not(test))]
 fn print_error(error: Error) -> ! {
     match error {
         Error::InvalidUserHome => {
