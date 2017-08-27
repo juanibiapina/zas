@@ -6,13 +6,8 @@ set -ex
 mkdir staging
 
 mkdir -p staging/zas
-mkdir -p staging/zas/bin
-mkdir -p staging/zas/libexec
 
-cp target/$TARGET/release/zasd staging/zas/bin
-cp -r resources staging/zas
-cp -r libexec staging/zas
-( cd staging/zas/bin && ln -s ../libexec/zas )
+cp target/$TARGET/release/zas staging/zas
 
 cd staging
 
