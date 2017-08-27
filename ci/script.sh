@@ -2,8 +2,8 @@
 
 set -ex
 
-cargo build --target $TARGET --verbose
-cargo test --target $TARGET
+cargo build --target $TARGET
+./run_tests.sh
 
 cargo build --target $TARGET --release
 
