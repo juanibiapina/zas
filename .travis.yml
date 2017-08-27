@@ -21,15 +21,6 @@ matrix:
     - os: osx
   # Add each target manually
   include:
-    - os: linux
-      env: TARGET=x86_64-unknown-linux-gnu
-      addons:
-        apt:
-          sources:
-            - kubuntu-backports
-          packages:
-            - cmake
-            - zlib1g-dev
     - os: osx
       env: TARGET=x86_64-apple-darwin
 
