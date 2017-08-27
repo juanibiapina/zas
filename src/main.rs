@@ -1,4 +1,8 @@
 extern crate zas;
+#[macro_use]
+extern crate clap;
+
+use clap::{App, SubCommand};
 
 use std::process::exit;
 use std::error::Error as StdError;
@@ -7,6 +11,27 @@ use zas::config::Config;
 use zas::error::Error;
 
 fn main() {
+    let matches = App::new("zas")
+        .version(crate_version!())
+        .author(crate_authors!())
+        .about("Simple router for local web development")
+        .subcommand(SubCommand::with_name("install")
+                    .about("install zas system wide hooks"))
+        .get_matches();
+
+    if let Some(_) = matches.subcommand_matches("install") {
+        match zas::install::run_install() {
+            Ok(()) => {},
+            Err(e) => {
+                print_error(e);
+            }
+        }
+    } else {
+        run_server();
+    }
+}
+
+fn run_server() {
     let config = match Config::new() {
         Ok(config) => config,
         Err(e) => {

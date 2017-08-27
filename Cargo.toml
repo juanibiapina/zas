@@ -13,9 +13,11 @@ futures = "*"
 tokio-core = "*"
 toml = "*"
 xdg = "*"
+clap = "*"
+tempdir = "*"
 
 [lib]
 doc = false
 
 [[bin]]
-name = "zasd"
+name = "zas"

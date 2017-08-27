@@ -2,11 +2,12 @@
 
 ### Current
 
-- Update http proxy to use async hyper
-- Update to rust 1.19
+- Rename main binary to zas
 - Remove process management
 - Remove system daemon
 - Remove bash CLI
+- Update to rust 1.19
+- Update http proxy to use async hyper
 
 ### 0.17.0
 

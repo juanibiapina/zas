@@ -29,7 +29,7 @@ export ZAS_DNS_PORT=13043
 export ZAS_HTTP_PORT=13044
 export XDG_CONFIG_HOME="$(pwd)/integration/fixtures/config"
 
-target/debug/zasd 1>&2 &
+target/debug/zas 1>&2 &
 
 bats integration
 
