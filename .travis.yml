@@ -25,8 +25,6 @@ matrix:
       env: TARGET=x86_64-apple-darwin
 
 install:
-  - git clone --depth 1 https://github.com/sstephenson/bats.git
-  - export PATH="./bats/bin:$PATH"
   - sh ci/install.sh
 
 script:

@@ -2,9 +2,6 @@
 
 set -ex
 
-cargo build --target $TARGET
-./run_tests.sh
-
 cargo build --target $TARGET --release
 
 # sanity check the file type
