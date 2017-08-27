@@ -1,6 +1,6 @@
 # Changelog
 
-### Current
+### 0.18.0
 
 - Rename main binary to zas
 - Remove process management
