@@ -18,6 +18,9 @@ Pull requests are very welcome.
 
 ## Installation
 
+**WARNING**: Current install instructions are broken. Zas needs to be compiled
+from source.
+
 **Zas can't run alongsize Pow, make sure you remove one before installing the other**
 
 To install, run:
