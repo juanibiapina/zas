@@ -1,5 +1,9 @@
 # Changelog
 
+### master
+
+- fix: Forward URL query params
+
 ### 0.19.0
 
 - Restore uninstall script

@@ -3,9 +3,13 @@
 @test "http proxy: proxies a GET to 'simple' app" {
   response="$(curl -s -H 'Host: simple.dev' localhost:$ZAS_HTTP_PORT)"
 
-  echo $response
-
   [ "$response" = "MOCK SIMPLE GET: Url: /" ]
+}
+
+@test "http proxy: proxies a GET with URL query string to 'simple' app" {
+  response="$(curl -s -H 'Host: simple.dev' "localhost:$ZAS_HTTP_PORT/url?email=1&other=2")"
+
+  [ "$response" = "MOCK SIMPLE GET: Url: /url?email=1&other=2" ]
 }
 
 @test "http proxy: proxies a GET to 'other' app" {

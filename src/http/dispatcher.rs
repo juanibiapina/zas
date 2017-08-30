@@ -70,7 +70,7 @@ impl Dispatcher {
             None => Connection::close(),
         };
 
-        let app_url = format!("http://localhost:{}{}", port, request.path());
+        let app_url = format!("http://localhost:{}{}", port, request.uri());
         let app_uri = Uri::from_str(&app_url).unwrap();
 
         let mut client_req = client::Request::new(request.method().clone(), app_uri);
