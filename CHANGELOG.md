@@ -1,6 +1,6 @@
 # Changelog
 
-### master
+### 0.20.0
 
 - fix: Forward URL query params
 
