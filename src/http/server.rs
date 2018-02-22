@@ -43,9 +43,9 @@ impl Server {
 
             let listener = TcpListener::bind(&address, &handle).unwrap();
 
-            let server = listener.incoming().for_each(|(sock, _)| {
+            let server = listener.incoming().for_each(|(tcp_stream, _)| {
                 let service = Dispatcher::new(app_manager.clone(), handle.clone());
-                let conn = http.serve_connection(sock, service);
+                let conn = http.serve_connection(tcp_stream, service);
                 let fut = conn
                     .map(|_| ())
                     .map_err(|e| eprintln!("server connection error: {}", e));
