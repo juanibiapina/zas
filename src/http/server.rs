@@ -10,9 +10,11 @@ use self::tokio_core::reactor::Core;
 use self::tokio_core::net::TcpListener;
 use self::hyper::server::Http;
 use self::futures::stream::Stream;
+use self::futures::Future;
 
 use error::Error;
 use config::Config;
+use http::server::hyper::Chunk;
 use http::dispatcher::Dispatcher;
 use http::app_manager::AppManager;
 
@@ -33,19 +35,23 @@ impl Server {
 
     fn create_thread(app_manager: Arc<AppManager>, port: u16) -> thread::JoinHandle<()> {
         thread::spawn(move || {
-            let http = Http::new();
+            let http = Http::<Chunk>::new();
             let mut core = Core::new().unwrap();
             let handle = core.handle();
 
             let address = SocketAddr::new(IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)), port);
 
             let listener = TcpListener::bind(&address, &handle).unwrap();
-            let server = listener.incoming()
-                .for_each(|(sock, addr)| {
-                    let service = Dispatcher::new(app_manager.clone(), handle.clone());
-                    http.bind_connection(&handle, sock, addr, service);
-                    Ok(())
-                });
+
+            let server = listener.incoming().for_each(|(sock, _)| {
+                let service = Dispatcher::new(app_manager.clone(), handle.clone());
+                let conn = http.serve_connection(sock, service);
+                let fut = conn
+                    .map(|_| ())
+                    .map_err(|e| eprintln!("server connection error: {}", e));
+                handle.spawn(fut);
+                Ok(())
+            });
 
             core.run(server).unwrap();
         })
