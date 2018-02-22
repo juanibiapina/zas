@@ -48,7 +48,7 @@ impl Dispatcher {
 
         response.set_body("OK");
 
-        return futures::future::ok(response).boxed();
+        return Box::new(futures::future::ok(response));
     }
 
     fn handle_app_request(&self, request: Request, app_name: String) -> Box<Future<Item = Response, Error = hyper::Error>> {
@@ -57,11 +57,13 @@ impl Dispatcher {
         let port = match result {
             Some(value) => value,
             None => {
-                return futures::future::ok(
-                    Response::new()
-                        .with_header(ContentLength("App not configured".len() as u64))
-                        .with_body("App not configured")
-                    ).boxed();
+                return Box::new(
+                    futures::future::ok(
+                        Response::new()
+                            .with_header(ContentLength("App not configured".len() as u64))
+                            .with_body("App not configured")
+                    )
+                );
             },
         };
 
