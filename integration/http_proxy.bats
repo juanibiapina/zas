@@ -6,6 +6,12 @@
   [ "$response" = "MOCK SIMPLE GET: Url: /" ]
 }
 
+@test "http proxy: proxies a GET to 'simple' app regardless of the TLD" {
+  response="$(curl -s -H 'Host: simple.localhost' localhost:$ZAS_HTTP_PORT)"
+
+  [ "$response" = "MOCK SIMPLE GET: Url: /" ]
+}
+
 @test "http proxy: proxies a GET with URL query string to 'simple' app" {
   response="$(curl -s -H 'Host: simple.dev' "localhost:$ZAS_HTTP_PORT/url?email=1&other=2")"
 
