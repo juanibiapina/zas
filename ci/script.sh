@@ -5,4 +5,4 @@ set -ex
 cargo build --target $TARGET --release
 
 # sanity check the file type
-file target/$TARGET/release/zasd
+file target/$TARGET/release/zas
