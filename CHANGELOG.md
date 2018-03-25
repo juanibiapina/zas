@@ -1,5 +1,11 @@
 # Changelog
 
+### 0.21.0
+
+- Upgrade to latest rust
+- Upgrade to latest hyper
+- Allow DNS resolver to resolve any TLDs
+
 ### 0.20.0
 
 - fix: Forward URL query params
