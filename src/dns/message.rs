@@ -1,6 +1,6 @@
-use dns::header::Header;
-use dns::question::Question;
-use dns::answer::Answer;
+use crate::dns::answer::Answer;
+use crate::dns::header::Header;
+use crate::dns::question::Question;
 
 pub struct Message {
     pub header: Header,
@@ -27,8 +27,8 @@ impl Message {
         }
 
         Message {
-            header: header,
-            questions: questions,
+            header,
+            questions,
             answers: Vec::new(), // TODO parse answers
         }
     }

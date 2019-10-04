@@ -1,22 +1,18 @@
-extern crate hyper;
-extern crate tokio_core;
-extern crate futures;
-
-use std::sync::{Arc};
-use std::thread;
 use std::net::{IpAddr, Ipv4Addr, SocketAddr};
+use std::sync::Arc;
+use std::thread;
 
-use self::tokio_core::reactor::Core;
-use self::tokio_core::net::TcpListener;
-use self::hyper::server::Http;
-use self::futures::stream::Stream;
-use self::futures::Future;
+use futures::stream::Stream;
+use futures::Future;
+use hyper::server::Http;
+use tokio_core::net::TcpListener;
+use tokio_core::reactor::Core;
 
-use error::Error;
-use config::Config;
-use http::server::hyper::Chunk;
-use http::dispatcher::Dispatcher;
-use http::app_manager::AppManager;
+use crate::config::Config;
+use crate::error::Error;
+use crate::http::app_manager::AppManager;
+use crate::http::dispatcher::Dispatcher;
+use hyper::Chunk;
 
 pub struct Server {
     pub thread: thread::JoinHandle<()>,
@@ -28,9 +24,7 @@ impl Server {
 
         let thread = Server::create_thread(app_manager, config.http_port);
 
-        Ok(Server {
-            thread: thread,
-        })
+        Ok(Server { thread })
     }
 
     fn create_thread(app_manager: Arc<AppManager>, port: u16) -> thread::JoinHandle<()> {
@@ -57,4 +51,3 @@ impl Server {
         })
     }
 }
-

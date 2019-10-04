@@ -1,13 +1,13 @@
-use std::str::FromStr;
-use std::thread;
-use std::net::UdpSocket;
 use std::net::Ipv4Addr;
 use std::net::SocketAddrV4;
+use std::net::UdpSocket;
+use std::str::FromStr;
+use std::thread;
 
-use config::Config;
-use dns::header::Header;
-use dns::answer::Answer;
-use dns::message::Message;
+use crate::config::Config;
+use crate::dns::answer::Answer;
+use crate::dns::header::Header;
+use crate::dns::message::Message;
 
 pub struct Server {
     pub thread: thread::JoinHandle<u8>,
@@ -17,14 +17,16 @@ impl Server {
     pub fn create(config: &Config) -> Server {
         let thread = Server::create_thread(config.dns_port);
 
-        Server{
-            thread: thread,
-        }
+        Server { thread }
     }
 
     fn create_thread(port: u16) -> thread::JoinHandle<u8> {
         thread::spawn(move || {
-            let socket = UdpSocket::bind(SocketAddrV4::new(Ipv4Addr::from_str("127.0.0.1").unwrap(), port)).unwrap();
+            let socket = UdpSocket::bind(SocketAddrV4::new(
+                Ipv4Addr::from_str("127.0.0.1").unwrap(),
+                port,
+            ))
+            .unwrap();
 
             let mut buffer: [u8; 512] = [0; 512];
 
@@ -35,13 +37,13 @@ impl Server {
 
                 let mut answers = Vec::new();
 
-                answers.push(Answer{
+                answers.push(Answer {
                     name: query_message.questions[0].name.clone(),
                     rrtype: 1,
                     class: 1,
                     ttl: 0,
                     length: 4,
-                    data: vec!(127, 0, 0, 1),
+                    data: vec![127, 0, 0, 1],
                 });
 
                 let answer_message = Message {
@@ -52,7 +54,7 @@ impl Server {
                         ar_count: 0,
                         ..query_message.header
                     },
-                    answers: answers,
+                    answers,
                     ..query_message
                 };
 
@@ -63,4 +65,3 @@ impl Server {
         })
     }
 }
-

@@ -1,20 +1,16 @@
-extern crate hyper;
-extern crate tokio_core;
-extern crate futures;
-
-use std::sync::Arc;
 use std::str::FromStr;
+use std::sync::Arc;
 
-use self::futures::Future;
-use self::hyper::Uri;
-use self::hyper::header::Host;
-use self::hyper::header::ContentLength;
-use self::hyper::header::Connection;
-use self::hyper::server::{Request, Response, Service};
-use self::tokio_core::reactor::{Handle};
-use self::hyper::client;
+use futures::Future;
+use hyper::client;
+use hyper::header::Connection;
+use hyper::header::ContentLength;
+use hyper::header::Host;
+use hyper::server::{Request, Response, Service};
+use hyper::Uri;
+use tokio_core::reactor::Handle;
 
-use http::app_manager::AppManager;
+use crate::http::app_manager::AppManager;
 
 pub struct Dispatcher {
     app_manager: Arc<AppManager>,
@@ -24,22 +20,20 @@ pub struct Dispatcher {
 impl Dispatcher {
     pub fn new(app_manager: Arc<AppManager>, handle: Handle) -> Dispatcher {
         Dispatcher {
-            app_manager: app_manager,
-            handle: handle,
+            app_manager,
+            handle,
         }
     }
 
     fn extract_app_name(&self, request: &Request) -> String {
         let host = &request.headers().get::<Host>().unwrap().hostname();
-        let host_parts = host.split(".").collect::<Vec<_>>();
+        let host_parts = host.split('.').collect::<Vec<_>>();
 
         match host_parts.split_last() {
-            Some((_, parts)) => {
-                parts.join(".")
-            },
+            Some((_, parts)) => parts.join("."),
             None => {
                 panic!("zas: invalid Host header");
-            },
+            }
         }
     }
 
@@ -48,23 +42,25 @@ impl Dispatcher {
 
         response.set_body("OK");
 
-        return Box::new(futures::future::ok(response));
+        Box::new(futures::future::ok(response))
     }
 
-    fn handle_app_request(&self, request: Request, app_name: String) -> Box<Future<Item = Response, Error = hyper::Error>> {
+    fn handle_app_request(
+        &self,
+        request: Request,
+        app_name: String,
+    ) -> Box<Future<Item = Response, Error = hyper::Error>> {
         let result = self.app_manager.get_port(&app_name);
 
         let port = match result {
             Some(value) => value,
             None => {
-                return Box::new(
-                    futures::future::ok(
-                        Response::new()
-                            .with_header(ContentLength("App not configured".len() as u64))
-                            .with_body("App not configured")
-                    )
-                );
-            },
+                return Box::new(futures::future::ok(
+                    Response::new()
+                        .with_header(ContentLength("App not configured".len() as u64))
+                        .with_body("App not configured"),
+                ));
+            }
         };
 
         let connection_header = match request.headers().get::<Connection>() {
@@ -84,25 +80,19 @@ impl Dispatcher {
             .keep_alive(false)
             .build(&self.handle);
 
-        let resp = client.request(client_req)
-                         .then(move |result| {
-                             match result {
-                                 Ok(client_resp) => {
-                                     Ok(Response::new()
-                                            .with_status(client_resp.status())
-                                            .with_headers(client_resp.headers().clone())
-                                            .with_header(connection_header)
-                                            .with_body(client_resp.body()))
-                                 }
-                                 Err(e) => {
-                                     println!("{:?}", &e);
-                                     Err(e)
-                                 }
-                             }
-                         });
+        let resp = client.request(client_req).then(move |result| match result {
+            Ok(client_resp) => Ok(Response::new()
+                .with_status(client_resp.status())
+                .with_headers(client_resp.headers().clone())
+                .with_header(connection_header)
+                .with_body(client_resp.body())),
+            Err(e) => {
+                println!("{:?}", &e);
+                Err(e)
+            }
+        });
 
         Box::new(resp)
-
     }
 }
 

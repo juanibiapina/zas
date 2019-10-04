@@ -35,7 +35,7 @@ impl Answer {
         buffer[offset] = ((self.ttl & (256 << 24)) >> 24) as u8;
         buffer[offset + 1] = ((self.ttl & (256 << 16)) >> 16) as u8;
         buffer[offset + 2] = ((self.ttl & (256 << 8)) >> 8) as u8;
-        buffer[offset + 3] = ((self.ttl & (256 << 0)) >> 0) as u8;
+        buffer[offset + 3] = (self.ttl & 256) as u8;
         offset += 4;
 
         buffer[offset] = (self.length >> 8) as u8;
