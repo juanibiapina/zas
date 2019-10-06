@@ -37,7 +37,7 @@ impl Dispatcher {
         }
     }
 
-    fn handle_zas_request(&self, _: Request) -> Box<Future<Item = Response, Error = hyper::Error>> {
+    fn handle_zas_request(&self, _: Request) -> Box<dyn Future<Item = Response, Error = hyper::Error>> {
         let mut response = Response::new();
 
         response.set_body("OK");
@@ -49,7 +49,7 @@ impl Dispatcher {
         &self,
         request: Request,
         app_name: String,
-    ) -> Box<Future<Item = Response, Error = hyper::Error>> {
+    ) -> Box<dyn Future<Item = Response, Error = hyper::Error>> {
         let result = self.app_manager.get_port(&app_name);
 
         let port = match result {
@@ -100,7 +100,7 @@ impl Service for Dispatcher {
     type Request = Request;
     type Response = Response;
     type Error = hyper::Error;
-    type Future = Box<Future<Item = Self::Response, Error = Self::Error>>;
+    type Future = Box<dyn Future<Item = Self::Response, Error = Self::Error>>;
 
     fn call(&self, request: Request) -> Self::Future {
         let app_name = self.extract_app_name(&request);
