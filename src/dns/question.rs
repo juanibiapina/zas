@@ -19,21 +19,28 @@ impl Question {
                 break;
             }
 
-            name.push(str::from_utf8(&buffer[offset .. offset + size]).unwrap().to_string());
+            name.push(
+                str::from_utf8(&buffer[offset..offset + size])
+                    .unwrap()
+                    .to_string(),
+            );
             offset += size;
         }
 
-        let rrtype: u16 = (buffer[offset] as u16) << 8 | buffer[offset+1] as u16;
+        let rrtype: u16 = u16::from(buffer[offset]) << 8 | u16::from(buffer[offset + 1]);
         offset += 2;
 
-        let class: u16 = (buffer[offset] as u16) << 8 | buffer[offset+1] as u16;
+        let class: u16 = u16::from(buffer[offset]) << 8 | u16::from(buffer[offset + 1]);
         offset += 2;
 
-        (Question{
-            name: name,
-            rrtype: rrtype,
-            class: class,
-        }, offset)
+        (
+            Question {
+                name,
+                rrtype,
+                class,
+            },
+            offset,
+        )
     }
 
     pub fn pack(&self, buffer: &mut [u8], offset: usize) -> usize {
@@ -63,4 +70,3 @@ impl Question {
         offset
     }
 }
-

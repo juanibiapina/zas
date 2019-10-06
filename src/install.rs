@@ -1,12 +1,8 @@
-extern crate tempdir;
-
-use self::tempdir::TempDir;
-
+use crate::error::Error;
 use std::fs::File;
-use std::process::Command;
 use std::io::Write;
-
-use error::Error;
+use std::process::Command;
+use tempdir::TempDir;
 
 static INSTALL_SCRIPT: &'static str = r#"
 #!/usr/bin/env bash
@@ -70,7 +66,8 @@ pub fn run_install() -> Result<(), Error> {
 
     Command::new("bash")
         .arg(file_path.to_str().unwrap())
-        .status().expect("problem running install script");
+        .status()
+        .expect("problem running install script");
 
     tmp_dir.close()?;
 

@@ -1,6 +1,3 @@
-extern crate xdg;
-extern crate toml;
-
 use std::io;
 
 #[derive(Debug)]

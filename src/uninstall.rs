@@ -1,12 +1,9 @@
-extern crate tempdir;
-
-use self::tempdir::TempDir;
-
 use std::fs::File;
-use std::process::Command;
 use std::io::Write;
+use std::process::Command;
+use tempdir::TempDir;
 
-use error::Error;
+use crate::error::Error;
 
 static UNINSTALL_SCRIPT: &'static str = r#"
 #!/usr/bin/env bash
@@ -40,7 +37,8 @@ pub fn run_uninstall() -> Result<(), Error> {
 
     Command::new("bash")
         .arg(file_path.to_str().unwrap())
-        .status().expect("problem running uninstall script");
+        .status()
+        .expect("problem running uninstall script");
 
     tmp_dir.close()?;
 

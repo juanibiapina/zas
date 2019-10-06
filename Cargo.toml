@@ -6,6 +6,7 @@ description = "Simple router for local web development"
 license = "MIT"
 homepage = "https://github.com/juanibiapina/zas"
 readme = "README.md"
+edition = "2018"
 
 [dependencies]
 hyper = "*"
@@ -15,6 +16,7 @@ toml = "*"
 xdg = "*"
 clap = "*"
 tempdir = "*"
+dirs = "2.0"
 
 [lib]
 doc = false
