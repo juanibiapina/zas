@@ -12,10 +12,10 @@ pub struct Config {
 
 impl Config {
     pub fn new() -> Result<Config, Error> {
-        let dns_port = r#try!(read_dns_port());
-        let http_port = r#try!(read_http_port());
-        let app_dir = env::var("ZAS_APP_DIR").unwrap_or(r#try!(default_app_dir()));
-        let log_dir = env::var("ZAS_LOG_DIR").unwrap_or(r#try!(default_log_dir()));
+        let dns_port = read_dns_port()?;
+        let http_port = read_http_port()?;
+        let app_dir = env::var("ZAS_APP_DIR").unwrap_or(default_app_dir()?);
+        let log_dir = env::var("ZAS_LOG_DIR").unwrap_or(default_log_dir()?);
 
         Ok(Config {
             dns_port,
@@ -48,14 +48,14 @@ fn parse_port(port: String) -> Result<u16, Error> {
 }
 
 fn default_app_dir() -> Result<String, Error> {
-    let mut path_buf = r#try!(home_dir_path());
+    let mut path_buf = home_dir_path()?;
     path_buf.push(".zas/apps");
 
     Ok(path_buf.to_str().unwrap().to_string())
 }
 
 fn default_log_dir() -> Result<String, Error> {
-    let mut path_buf = r#try!(home_dir_path());
+    let mut path_buf = home_dir_path()?;
     path_buf.push(".zas/logs");
 
     Ok(path_buf.to_str().unwrap().to_string())
